@@ -9,6 +9,7 @@ interface IResponse<T = any> {
   data: T;
   message: string;
   total?: number
+  error_msg?: string
 }
 
 interface ISuccessResponse {
@@ -45,11 +46,11 @@ class HttpClient {
   }
 
   private handleResponse = <T>(response: AxiosResponse<IResponse<T>>): AxiosResponse<IResponse<T>> => {
-    const { code, message: msg } = response.data
-
+    const { code, data, message: msg, error_msg: e_msg } = response.datac
     if (code !== 0) {
-      message.error(msg)
+      message.error(e_msg)
     }
+
     return response
   }
 
@@ -59,8 +60,7 @@ class HttpClient {
       window.location.href = "/login"
 
     } else {
-      const { message: msg } = error.response.data;
-      message.error(msg || error.message || "请求出错了")
+      message.error(error.response.data.error_msg || error.message || "请求出错了")
     }
     throw error;
   }
