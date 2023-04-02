@@ -1,0 +1,19 @@
+.login-container {
+  background-image: url("../../assets/cover/cover.jpg");
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form-container {
+  width: 300px;
+  padding: 40px;
+  border: 1px solid #c48686;
+  /* border: 1px solid rgba(0, 0, 0, 0.3); */
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px #c48686;
+  background-color: #ffffff; /* 加入此行设置背景色为白色 */
+}
