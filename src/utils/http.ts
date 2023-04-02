@@ -46,7 +46,7 @@ class HttpClient {
   }
 
   private handleResponse = <T>(response: AxiosResponse<IResponse<T>>): AxiosResponse<IResponse<T>> => {
-    const { code, data, message: msg, error_msg: e_msg } = response.datac
+    const { code, data, message: msg, error_msg: e_msg } = response.data
     if (code !== 0) {
       message.error(e_msg)
     }
