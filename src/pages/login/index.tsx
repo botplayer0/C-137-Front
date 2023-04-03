@@ -1,23 +1,35 @@
 import { apiRegisterUser } from "@/api/auth/auth";
 import { RequestAuthRegister } from "@/api/auth/auth.type";
+import useAuthStore from "@/store/auth.store";
 import type { TabsProps } from "antd";
-import { Tabs } from "antd";
+import { message, Tabs } from "antd";
+import { useNavigate } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import RegisterForm from "./components/RegisterForm";
 import "./index.css";
 
 const LoginPage: React.FC = () => {
-  const handleLoginFinish = (values: any) => {
-    console.log("LoginFormSummited: ", values);
+  const { login } = useAuthStore();
+  const navigate = useNavigate();
+
+  const handleLoginFinish = async (values: any) => {
+    const isLoginSuccess = await login(values.account, values.password);
+    if (isLoginSuccess) {
+      message.success("登录成功~");
+      navigate("/");
+    } else {
+      message.error("登录失败");
+    }
   };
 
   const handleRegisterFinish = async (values: RequestAuthRegister) => {
-    console.log("RegisterFormSumitted: ", values);
     const res = await apiRegisterUser({
       email: values.email,
       password: values.password,
     });
-    console.log("res", res);
+    if (res.code === 0) {
+      message.success("注册成功~");
+    }
   };
 
   const items: TabsProps["items"] = [

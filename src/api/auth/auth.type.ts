@@ -12,10 +12,10 @@ interface ResponseAuthRegister extends IResponse {
 }
 
 
-interface RequestAuthLogin extends IResponse<{
+interface RequestAuthLogin {
   account: string,
   password: string
-}> { }
+}
 
 interface ResponseAuthLogin extends IResponse<{
   user_id: number

@@ -10,7 +10,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onFinish }) => {
   return (
     <Form name="login-form" onFinish={onFinish}>
       <Form.Item
-        name="email"
+        name="account"
         rules={[{ required: true, message: "输入邮箱账号, 可不带@后缀" }]}
       >
         <Input prefix={<MailOutlined />} placeholder="Email" />

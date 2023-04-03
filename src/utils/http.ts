@@ -1,6 +1,8 @@
 import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse } from "axios";
 import { message } from "antd";
-import { error } from "console";
+import useAuthStore from "@/store/auth.store";
+import { createBrowserHistory, History } from 'history';
+
 
 interface IRequestOptions extends AxiosRequestConfig { }
 
@@ -20,6 +22,7 @@ interface ISuccessResponse {
 
 class HttpClient {
   private readonly instance: AxiosInstance;
+  private readonly history = createBrowserHistory();;
 
   constructor(baseUrl: string, options?: IRequestOptions) {
     this.instance = axios.create({
@@ -31,12 +34,13 @@ class HttpClient {
 
     this.instance.interceptors.request.use(this.handleRequest)
     this.instance.interceptors.response.use(this.handleResponse, this.handleError);
+
   }
 
   private handleRequest = (config: InternalAxiosRequestConfig<AxiosRequestConfig>): InternalAxiosRequestConfig<AxiosRequestConfig> => {
     // 当登录或者注册时, header中无需 Authorization
-    if (!config.url?.match(/\/(login|register)$/)) {
-      const token = localStorage.getItem('token') || '123'
+    if (!config.url?.match(/\/(login|register|refresh)$/)) {
+      const token = useAuthStore.getState().getToken.token || 'null'
       if (token) {
         config.headers.Authorization = `${token}`
       }
@@ -57,11 +61,12 @@ class HttpClient {
   private handleError = (error: any): Promise<any> => {
     // 处理状态码==400
     if (error.response && error.response.status === 401) {
-      window.location.href = "/login"
-
+      this.history.push("/login")
+      message.error(error.response.data.error_msg || error.message || "请求出错了")
     } else {
       message.error(error.response.data.error_msg || error.message || "请求出错了")
     }
+    // 抛出axios_error
     throw error;
   }
 
