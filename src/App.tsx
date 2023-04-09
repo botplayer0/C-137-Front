@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AuthRoute from "./components/AuthRoute";
-import BaseRoute from "./consts/BaseRoute";
-import Dashboard from "./pages/dashoboard";
+import { routeConfig } from "./consts/routeConfig";
+import MyLayout from "./pages/Dashboard";
 import LoginPage from "./pages/login";
-import { routerMapper } from "./utils/routerMapper";
+import { outletRender } from "./utils/routerMapper";
 
 function App() {
   return (
@@ -15,15 +15,15 @@ function App() {
             path="/"
             element={
               <AuthRoute>
-                <Dashboard />
+                <MyLayout />
               </AuthRoute>
             }
           >
-            {routerMapper(BaseRoute.route).map((item) => (
+            {outletRender(routeConfig.route.routes).map((items) => (
               <Route
-                key={item.path}
-                path={item.path}
-                element={item.component}
+                path={items.path}
+                key={items.key}
+                element={items.element}
               />
             ))}
           </Route>

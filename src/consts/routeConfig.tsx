@@ -15,12 +15,28 @@ import {
   ScheduleOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { ReactNode } from "react";
 
 // import DashBoard from '@/pages/DashBoard'
 // import ApiCase from '@/pages/ApiTest/ApiCase'
 // import Project from '@/pages/ConfigManage/Project'
 
-export default {
+export type TypeRoutes = {
+  path: string;
+  name: string;
+  routes?: TypeRoutes[];
+  icon?: ReactNode;
+  component?: ReactNode;
+  chick?: boolean;
+};
+
+export type TypeOutlet = {
+  key: string;
+  path: string;
+  element: ReactNode;
+};
+
+export const routeConfig = {
   route: {
     path: "/",
     name: "首页",

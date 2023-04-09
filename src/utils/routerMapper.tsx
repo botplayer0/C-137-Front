@@ -1,65 +1,65 @@
-import type { ReactNode } from "react";
+import type { TypeOutlet, TypeRoutes } from "@/consts/routeConfig";
+import { Menu } from "antd";
 
-interface routeProp {
-  path: string;
-  name?: string;
-  icon?: ReactNode;
-  component?: ReactNode;
-  // click?: boolean;
-  routes?: Array<routeProp>;
+const { SubMenu } = Menu;
+interface MenuItem {
+  key: string;
+  // title: string;
+  label: React.ReactNode;
+  icon?: React.ReactNode;
+  link?: React.ReactNode;
+  children?: MenuItem[];
 }
 
-export const routerMapper = (route: routeProp) => {
-  const routes = [];
-  if (route.component) {
-    routes.push({
-      path: route.path,
-      name: route.name,
-      component: route.component,
-    });
-  }
-  if (route.routes && route.routes.length > 0) {
-    route.routes.forEach((item) => {
-      let childRoute = routerMapper(item);
-      if (childRoute && childRoute.length > 0) {
-        childRoute.forEach((cItem) => routes.push(cItem));
-      }
-    });
-  }
-  return routes;
+export const menuRender = (routes: TypeRoutes[]) => {
+  return routes.map((route) => {
+    if (route.routes) {
+      return (
+        <SubMenu key={route.path} icon={route.icon} title={route.name}>
+          {menuRender(route.routes)}
+        </SubMenu>
+      );
+    } else {
+      return (
+        <Menu.Item key={route.path} icon={route.icon}>
+          {route.name}
+        </Menu.Item>
+      );
+    }
+  });
 };
 
-export const generateBreadcrumbs = (route: routeProp) => {
-  if (!route) {
-    return null;
-  }
+export const newMenuRender = (routes: TypeRoutes[]) => {
+  return routes.map((route) => {
+    const menuItem: MenuItem = {
+      key: route.path,
+      label: route.name,
+      icon: route.icon,
+    };
+    if (route.routes && route.routes.length > 0) {
+      menuItem.children = newMenuRender(route.routes);
+    }
 
-  const { path, name, component, routes } = route;
+    if (route.component) {
+      menuItem.link = route.path;
+    }
+    return menuItem;
+  });
+};
 
-  if (!component) {
-    return null;
-  }
+export const outletRender = (routes: TypeRoutes[]) => {
+  const result: TypeOutlet[] = [];
+  routes.forEach((route) => {
+    const { path, component, routes: subRoute } = route;
 
-  const breadcrumb = {
-    path,
-    breadcrumbName: name,
-  };
+    if (component) {
+      result.push({ path: path, key: path, element: component });
+    }
 
-  if (!routes || routes.length === 0) {
-    return breadcrumb;
-  }
-
-  const childBreadcrumbs = routes
-    .map((childRoute) => generateBreadcrumbs(childRoute))
-    .filter((childBreadcrumb) => childBreadcrumb);
-
-  if (childBreadcrumbs.length === 0) {
-    return breadcrumb;
-  }
-
-  return {
-    path,
-    breadcrumbName: name,
-    children: childBreadcrumbs,
-  };
+    if (subRoute) {
+      const subOutletRender = outletRender(subRoute);
+      result.push(...subOutletRender);
+    }
+  });
+  return result;
 };
