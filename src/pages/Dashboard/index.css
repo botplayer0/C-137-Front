@@ -1,0 +1,24 @@
+.collapse-btn {
+  position: absolute;
+  top: 3%;
+  right: -14px;
+  transform: translateY(-50%);
+  width: 25px;
+  height: 25px;
+  background-color: #fff;
+  color: #001529;
+  text-align: center;
+  line-height: 30px;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.collapse-btn:hover {
+  background-color: #f2f2f2;
+}
+
+.collapse-btn .anticon {
+  font-size: 18px;
+  line-height: 1;
+}
