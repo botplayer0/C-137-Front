@@ -1,3 +1,4 @@
+import EditorPython from "@/components/Editor/EditorPython";
 import { Form, Input, Modal } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { useState } from "react";
@@ -47,7 +48,7 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
             <Input />
           </Form.Item>
           <Form.Item label="脚本">
-            <TextArea />
+            <EditorPython />
           </Form.Item>
         </Form>
       </Modal>

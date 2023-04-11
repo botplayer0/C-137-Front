@@ -27,7 +27,9 @@
     }
   },
   "include": [
-    "src"
+    "src",
+    "src/**/*.js",
+    "src/**/*.jsx",
   ],
   "references": [
     {
