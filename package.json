@@ -23,6 +23,7 @@
     "zustand": "^4.3.6"
   },
   "devDependencies": {
+    "@types/ace": "^0.0.48",
     "@types/node": "^18.15.11",
     "@types/qs": "^6.9.7",
     "@types/react": "^18.0.28",

@@ -1,5 +1,5 @@
 import http, { IResponse } from "@/utils/http";
-import type { RequestAddCScript, RequestUpdateCScript, ResponseCScriptDetail, ResponseCScriptList } from "./api.config.type";
+import type { RequestAddCScript, RequestUpdateCScript, ResponseCScriptDetail, ResponseCScriptList } from "./api.script.type";
 
 export const apiAddCScript = async (params: RequestAddCScript) => {
   const response: ResponseCScriptDetail = await http.post("/common/cs/add", params)

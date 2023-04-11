@@ -6,6 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { CMenu } from "./components/CMenu";
 import CTabs from "./components/CTabs";
 
+import { ProCard } from "@ant-design/pro-components";
 import "./index.css";
 
 const { Sider, Content } = Layout;
@@ -129,12 +130,14 @@ function MyLayout() {
       </Sider>
       <Layout style={{ zIndex: 1 }}>
         <Content>
-          <CTabs
-            items={tabsItem}
-            activeKey={selectedKeys[0]}
-            onChange={handleMenuClick}
-            onEdit={delTabs}
-          />
+          <ProCard style={{ minHeight: "100vh" }}>
+            <CTabs
+              items={tabsItem}
+              activeKey={selectedKeys[0]}
+              onChange={handleMenuClick}
+              onEdit={delTabs}
+            />
+          </ProCard>
           {/* <Outlet /> */}
         </Content>
       </Layout>

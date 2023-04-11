@@ -1,3 +1,4 @@
+import CScript from "@/pages/ApiTest/CScript";
 import {
   ApiOutlined,
   BarChartOutlined,
@@ -103,7 +104,7 @@ export const routeConfig = {
             path: "/apitest/script",
             name: "公共脚本",
             icon: <CodeOutlined />,
-            component: <div>1</div>,
+            component: <CScript />,
           },
         ],
       },
