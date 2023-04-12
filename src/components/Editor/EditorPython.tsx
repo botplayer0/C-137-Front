@@ -1,10 +1,17 @@
+import "ace-builds/src-noconflict/ext-language_tools";
 import "ace-builds/src-noconflict/mode-python";
 import "ace-builds/src-noconflict/theme-monokai";
 import { useState } from "react";
 import AceEditor from "react-ace";
 
-const EditorPython: React.FC = () => {
+interface IEditorProps {
+  var_script?: string | null;
+  setInitVarScript: (value: string) => void;
+}
+
+const EditorPython: React.FC<IEditorProps> = (props) => {
   const [code, setCode] = useState<string>("");
+
   const handleCodeChange = (newCode: string) => {
     setCode(newCode);
   };
@@ -13,8 +20,8 @@ const EditorPython: React.FC = () => {
     <AceEditor
       mode="python"
       theme="monokai"
-      value={code}
-      onChange={handleCodeChange}
+      value={props.var_script}
+      // onChange={props.setInitVarScript}
       name="python-editor"
       editorProps={{ $blockScrolling: true }}
       setOptions={{

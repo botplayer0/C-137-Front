@@ -22,7 +22,10 @@
     "baseUrl": "./",
     "paths": {
       "@/*": [
-        "src/*"
+        "src/*",
+      ],
+      "ace-builds/*": [
+        "node_modules/ace-builds/src-noconflict/*"
       ]
     }
   },

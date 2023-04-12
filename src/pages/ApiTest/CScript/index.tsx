@@ -1,3 +1,4 @@
+import { useApiScriptStore } from "@/store/api.script.store";
 import { Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { useState } from "react";
@@ -10,44 +11,6 @@ interface DataType {
   var_script: string;
   var_key: string;
 }
-
-const columns: ColumnsType<DataType> = [
-  {
-    title: "脚本名",
-    dataIndex: "name",
-    key: "name",
-    width: "10%",
-    // render: (text) => <a>{text}</a>,
-  },
-  {
-    title: "描述",
-    dataIndex: "desc",
-    key: "desc",
-  },
-  {
-    title: "变量名",
-    dataIndex: "var_key",
-    key: "var_key",
-    width: "10%",
-  },
-  {
-    title: "脚本详情",
-    dataIndex: "var_script",
-    key: "var_script",
-    ellipsis: true,
-  },
-  {
-    title: "操作",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>编辑</a>
-        <a>调试</a>
-        <a>删除</a>
-      </Space>
-    ),
-  },
-];
 
 const data: DataType[] = [
   {
@@ -62,13 +25,68 @@ const data: DataType[] = [
 
 const CScript: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [editorValue, setEditorValue] = useState<DataType | undefined>(
+    undefined
+  );
+  const { editScript, setEdit, clearEdit } = useApiScriptStore();
+
+  const onClickEdit = (record: DataType) => {
+    setEdit(record);
+    setOpen(true);
+  };
+
+  const columns: ColumnsType<DataType> = [
+    {
+      title: "脚本名",
+      dataIndex: "name",
+      key: "name",
+      width: "10%",
+      // render: (text) => <a>{text}</a>,
+    },
+    {
+      title: "描述",
+      dataIndex: "desc",
+      key: "desc",
+    },
+    {
+      title: "变量名",
+      dataIndex: "var_key",
+      key: "var_key",
+      width: "10%",
+    },
+    {
+      title: "脚本详情",
+      dataIndex: "var_script",
+      key: "var_script",
+      ellipsis: true,
+    },
+    {
+      title: "操作",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <a onClick={() => onClickEdit(record)}>编辑</a>
+          <a>调试</a>
+          <a>删除</a>
+        </Space>
+      ),
+    },
+  ];
+
   return (
     <div>
       <Table columns={columns} dataSource={data} />
       <div>
-        <button onClick={() => setOpen(true)}>Button</button>
+        <button
+          onClick={() => {
+            clearEdit();
+            setOpen(true);
+          }}
+        >
+          Button
+        </button>
       </div>
-      <CScriptModal open={open} setOpen={setOpen} />
+      <CScriptModal open={open} setOpen={setOpen} editorValue={editorValue} />
     </div>
   );
 };
