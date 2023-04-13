@@ -20,7 +20,7 @@ interface IModalProps {
 
 const CScriptModal: React.FC<IModalProps> = (props) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const { editScript, setEdit, clearEdit } = useApiScriptStore();
+  const { scriptInfo, setScriptInfo, updateScript } = useApiScriptStore();
 
   const handleOK = () => {
     setConfirmLoading(true);
@@ -52,23 +52,33 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
         >
           <Form.Item label="脚本名">
             <Input
-              value={editScript?.name || ""}
+              value={scriptInfo?.name || ""}
               onChange={(e) => {
-                setEdit({ ...editScript, name: e.target.value });
+                setScriptInfo({ ...scriptInfo, name: e.target.value });
               }}
             />
           </Form.Item>
           <Form.Item label="描述">
-            <TextArea value={editScript?.desc || ""} onChange={(e) => {
-                setEdit({ ...editScript, desc: e.target.value });
-              }}/>
+            <TextArea
+              value={scriptInfo?.desc || ""}
+              onChange={(e) => {
+                setScriptInfo({ ...scriptInfo, desc: e.target.value });
+              }}
+            />
           </Form.Item>
           <Form.Item label="变量名">
-            <Input value={editScript?.var_key || ""} onChange={(e) => {
-                setEdit({ ...editScript, var_key: e.target.value }}/>
+            <Input
+              value={scriptInfo?.var_key || ""}
+              onChange={(e) => {
+                setScriptInfo({ ...scriptInfo, var_key: e.target.value });
+              }}
+            />
           </Form.Item>
           <Form.Item label="脚本">
-            <EditorPython var_script={editScript?.var_script || ""} />
+            <EditorPython
+              var_script={scriptInfo?.var_script || ""}
+              handleSetScript={updateScript}
+            />
           </Form.Item>
         </Form>
       </Modal>

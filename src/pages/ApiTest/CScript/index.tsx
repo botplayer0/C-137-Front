@@ -1,7 +1,7 @@
 import { useApiScriptStore } from "@/store/api.script.store";
 import { Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CScriptModal from "./components/CScriptModal";
 
 interface DataType {
@@ -28,12 +28,31 @@ const CScript: React.FC = () => {
   const [editorValue, setEditorValue] = useState<DataType | undefined>(
     undefined
   );
-  const { editScript, setEdit, clearEdit } = useApiScriptStore();
+  const {
+    scriptList,
+    apiGetScriptList,
+    setScriptList,
+    scriptInfo,
+    setScriptInfo,
+    clearScriptInfo,
+  } = useApiScriptStore();
 
   const onClickEdit = (record: DataType) => {
-    setEdit(record);
+    setScriptInfo(record);
     setOpen(true);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await apiGetScriptList();
+      if (result.code === 0) {
+        setScriptList(result.data);
+      }
+      // setData(result.data);
+    };
+
+    fetchData();
+  }, []);
 
   const columns: ColumnsType<DataType> = [
     {
@@ -75,11 +94,11 @@ const CScript: React.FC = () => {
 
   return (
     <div>
-      <Table columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={scriptList} />
       <div>
         <button
           onClick={() => {
-            clearEdit();
+            clearScriptInfo();
             setOpen(true);
           }}
         >
