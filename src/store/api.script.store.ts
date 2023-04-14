@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type { ResponseCScriptList } from "@/api/config/api.script.type";
+import type { ResponseCScriptLists, ICScriptList } from "@/api/config/api.script.type";
 import { IResponse } from "@/utils/http";
 import { apiCScriptList } from "@/api/config/api.script";
 
@@ -12,8 +12,8 @@ interface TypeOfEditorCScript {
 }
 
 interface ApiScriptStore {
-  scriptList: ResponseCScriptList[]
-  setScriptList: (data: ResponseCScriptList[]) => void
+  scriptList: ICScriptList[]
+  setScriptList: (data: ICScriptList[]) => void
   apiGetScriptList: () => Promise<IResponse>
   scriptInfo: TypeOfEditorCScript
   setScriptInfo: (record: TypeOfEditorCScript) => void
@@ -25,7 +25,7 @@ interface ApiScriptStore {
 const useApiScriptStore = create<ApiScriptStore>((set, get) => ({
   scriptList: [],
   apiGetScriptList: () => apiCScriptList(),
-  setScriptList: (data: ResponseCScriptList[]) => set({ scriptList: data }),
+  setScriptList: (data: ICScriptList[]) => set({ scriptList: data }),
   scriptInfo: {},
   setScriptInfo: (record: TypeOfEditorCScript) => set({ scriptInfo: record }),
   clearScriptInfo: () => set({ scriptInfo: {} }),

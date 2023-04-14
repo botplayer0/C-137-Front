@@ -61,8 +61,7 @@ class HttpClient {
   private handleError = (error: any): Promise<any> => {
     console.log("here", error)
     if (error.code === "ERR_NETWORK") {
-      console.log("in_here")
-      // message.error("网络异常")
+      message.error(`网络异常`)
     }
     // 处理状态码==400
     else if (error.response && error.response.status === 401) {

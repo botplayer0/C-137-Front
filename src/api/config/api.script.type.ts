@@ -17,11 +17,32 @@ interface RequestUpdateCScript {
   var_script?: string
 }
 
-interface ResponseCScriptList extends IResponse<{
+interface ICScriptList {
+  cs_id: string
+  name: string
+  description?: string
+  var_key?: string
+  var_script?: string
+  tag?: string
+}
+
+interface ResponseCScriptLists {
+  cs: ICScriptList[]
+  total: number
+}
+
+interface ResponseCScriptList {
   cs_id: number
   name: string
+  description?: string
+  var_key?: string
+  var_script?: string
   tag?: string
-}> { }
+}
+
+// interface ResponseCScriptList extends IResponse<{
+//   data: ResponseCScriptList[]
+// }> { }
 
 interface ResponseCScriptDetail extends IResponse<{
   cs_id: number
@@ -37,6 +58,8 @@ interface ResponseCScriptDetail extends IResponse<{
 
 export type {
   RequestAddCScript,
+  ICScriptList,
+  ResponseCScriptLists,
   RequestUpdateCScript,
   ResponseCScriptDetail,
   ResponseCScriptList
