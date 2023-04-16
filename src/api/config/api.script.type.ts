@@ -9,6 +9,11 @@ interface RequestAddCScript {
   var_script: string
 }
 
+interface RequestPyScript {
+  get_var: string
+  script: string
+}
+
 interface RequestUpdateCScript {
   name?: string
   description?: string
@@ -62,5 +67,6 @@ export type {
   ResponseCScriptLists,
   RequestUpdateCScript,
   ResponseCScriptDetail,
-  ResponseCScriptList
+  ResponseCScriptList,
+  RequestPyScript
 }

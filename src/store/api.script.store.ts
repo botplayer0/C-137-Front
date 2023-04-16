@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import type { ResponseCScriptLists, ICScriptList } from "@/api/config/api.script.type";
+import type { ResponseCScriptLists, ICScriptList, RequestPyScript } from "@/api/config/api.script.type";
 import { IResponse } from "@/utils/http";
-import { apiCScriptDebug, apiCScriptDetail, apiCScriptList } from "@/api/config/api.script";
+import { apiCScriptDebug, apiCScriptDetail, apiCScriptList, apiPyScriptDebug } from "@/api/config/api.script";
 
 interface TypeOfEditorCScript {
   cs_id?: string
@@ -23,6 +23,7 @@ interface ApiScriptStore {
   apiGetScriptList: (page?: number, page_size?: number, tag?: string) => Promise<IResponse>
   apiGetScriptDetail: (cs_id: string) => Promise<IResponse>
   apiDebugCScript: (cs_id: number) => Promise<IResponse>
+  apiPostDebugPyScript: (scriptParams: RequestPyScript) => Promise<IResponse>
 }
 
 
@@ -40,7 +41,8 @@ const useApiScriptStore = create<ApiScriptStore>((set, get) => ({
   // 接口方法
   apiGetScriptList: (page?: number, page_size?: number, tag?: string) => apiCScriptList(page, page_size, tag),
   apiGetScriptDetail: (cs_id: string) => apiCScriptDetail(cs_id),
-  apiDebugCScript: (cs_id: number) => apiCScriptDebug(cs_id)
+  apiDebugCScript: (cs_id: number) => apiCScriptDebug(cs_id),
+  apiPostDebugPyScript: (scriptParams: RequestPyScript) => apiPyScriptDebug(scriptParams)
 }))
 
 export { useApiScriptStore }
