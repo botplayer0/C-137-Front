@@ -6,12 +6,22 @@ export const apiAddCScript = async (params: RequestAddCScript) => {
   return response
 }
 
-export const apiCScriptList = async () => {
-  const response = await http.get<IResponse<ResponseCScriptLists>>("/common/cs/list")
+export const apiCScriptList = async (page?: number, page_size?: number, tag?: string) => {
+  const params = {
+    page: page ?? 1,
+    page_size: page_size ?? 20,
+    tag
+  }
+  const response = await http.get<IResponse<ResponseCScriptLists>>("/common/cs/list", { params })
   return response
 }
 
-export const apiCScriptDetail = async (cs_id: number) => {
+export const apiCScriptDetail = async (cs_id: number | string) => {
   const response = await http.get(`/common/cs/${cs_id}/detail`)
+  return response
+}
+
+export const apiCScriptDebug = async (cs_id: number) => {
+  const response = await http.get(`/common/cs/${cs_id}/debug`)
   return response
 }

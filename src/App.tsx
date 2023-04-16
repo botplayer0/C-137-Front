@@ -22,7 +22,7 @@ function App() {
             {outletRender(routeConfig.route.routes).map((items) => (
               <Route
                 path={items.path}
-                key={items.key}
+                key={items.path}
                 element={items.element}
               />
             ))}

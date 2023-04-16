@@ -1,6 +1,6 @@
 import { ICScriptList } from "@/api/config/api.script.type";
 import { useApiScriptStore } from "@/store/api.script.store";
-import { Space, Table } from "antd";
+import { message, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import CScriptModal from "./components/CScriptModal";
@@ -16,31 +16,60 @@ interface DataType {
 
 const CScript: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [tableTotal, setTableTotal] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const PAGE_SIZE = 20;
 
   const {
     scriptList,
     apiGetScriptList,
     setScriptList,
+    apiGetScriptDetail,
+    apiDebugCScript,
     scriptInfo,
     setScriptInfo,
     clearScriptInfo,
   } = useApiScriptStore();
 
-  const onClickEdit = (record: ICScriptList) => {
-    setScriptInfo(record);
+  const onClickEdit = async (record: ICScriptList) => {
+    const fetchCSDetail = await apiGetScriptDetail(record.cs_id);
+    if (fetchCSDetail.code === 0) {
+      setScriptInfo(fetchCSDetail.data);
+    } else {
+      clearScriptInfo();
+    }
     setOpen(true);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const result = await apiGetScriptList();
-      if (result.code === 0) {
-        setScriptList(result.data);
-      }
-      // setData(result.data);
-    };
+  const fetchScriptList = async (
+    page?: number,
+    pageSize?: number,
+    tag?: string
+  ) => {
+    const result = await apiGetScriptList(
+      (page = page),
+      (pageSize = pageSize),
+      tag
+    );
+    if (result.code === 0) {
+      setScriptList(result.data);
+      setTableTotal(result.total ?? 0);
+      setCurrentPage(page);
+    }
+  };
 
-    fetchData();
+  const handleDebugCScript = async (record: DataType) => {
+    const result = await apiDebugCScript(parseInt(record.cs_id));
+    console.log(result);
+    if (result.code === 0) {
+      message.success(JSON.stringify(result.data));
+    } else {
+      message.error(result.error_msg);
+    }
+  };
+
+  useEffect(() => {
+    fetchScriptList();
   }, []);
 
   const columns: ColumnsType<DataType> = [
@@ -53,8 +82,9 @@ const CScript: React.FC = () => {
     },
     {
       title: "描述",
-      dataIndex: "desc",
-      key: "desc",
+      dataIndex: "description",
+      width: "20%",
+      key: "description",
     },
     {
       title: "变量名",
@@ -63,18 +93,13 @@ const CScript: React.FC = () => {
       width: "10%",
     },
     {
-      title: "脚本详情",
-      dataIndex: "var_script",
-      key: "var_script",
-      ellipsis: true,
-    },
-    {
       title: "操作",
       key: "action",
+      width: "10%",
       render: (_, record) => (
         <Space size="middle">
           <a onClick={() => onClickEdit(record)}>编辑</a>
-          <a>调试</a>
+          <a onClick={() => handleDebugCScript(record)}>调试</a>
           <a>删除</a>
         </Space>
       ),
@@ -83,7 +108,18 @@ const CScript: React.FC = () => {
 
   return (
     <div>
-      <Table columns={columns} dataSource={scriptList} />
+      <Table
+        columns={columns}
+        dataSource={scriptList}
+        pagination={{
+          pageSize: PAGE_SIZE,
+          current: currentPage,
+          total: tableTotal,
+          onChange: (page, pageSzie) => {
+            fetchScriptList(page, pageSzie);
+          },
+        }}
+      />
       <div>
         <button
           onClick={() => {

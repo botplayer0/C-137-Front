@@ -60,9 +60,9 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
           </Form.Item>
           <Form.Item label="描述">
             <TextArea
-              value={scriptInfo?.desc || ""}
+              value={scriptInfo?.description || ""}
               onChange={(e) => {
-                setScriptInfo({ ...scriptInfo, desc: e.target.value });
+                setScriptInfo({ ...scriptInfo, description: e.target.value });
               }}
             />
           </Form.Item>
