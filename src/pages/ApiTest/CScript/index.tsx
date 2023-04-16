@@ -1,6 +1,6 @@
 import { ICScriptList } from "@/api/config/api.script.type";
 import { useApiScriptStore } from "@/store/api.script.store";
-import { message, Space, Table } from "antd";
+import { message, Modal, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import CScriptModal from "./components/CScriptModal";
@@ -12,6 +12,10 @@ interface DataType {
   tags?: string;
   var_script?: string;
   var_key?: string;
+}
+
+interface IModalInfo {
+  [key: string]: any;
 }
 
 const CScript: React.FC = () => {
@@ -60,12 +64,24 @@ const CScript: React.FC = () => {
 
   const handleDebugCScript = async (record: DataType) => {
     const result = await apiDebugCScript(parseInt(record.cs_id));
-    console.log(result);
     if (result.code === 0) {
-      message.success(JSON.stringify(result.data));
+      debugInfo(record.var_key, result.data);
+      // message.success(JSON.stringify(result.data));
     } else {
       message.error(result.error_msg);
     }
+  };
+
+  const debugInfo = (varKey: string, infoMessage: IModalInfo) => {
+    Modal.info({
+      title: "调试结果",
+      content: (
+        <div>
+          <p>提取变量: {varKey}</p>
+          <p>返回结果: {JSON.stringify(infoMessage[varKey])}</p>
+        </div>
+      ),
+    });
   };
 
   useEffect(() => {
