@@ -1,7 +1,7 @@
 import type { IResponse } from '@/utils/http'
 
 
-interface RequestAddCScript {
+interface ARequestAddCScript {
   name: string
   description?: string
   tag?: string
@@ -9,17 +9,34 @@ interface RequestAddCScript {
   var_script: string
 }
 
-interface RequestPyScript {
+interface ARequestPyScript {
   get_var: string
   script: string
 }
 
-interface RequestUpdateCScript {
+interface ARequestUpdateCScript {
   name?: string
   description?: string
   tag?: string
   var_key?: string
   var_script?: string
+}
+
+interface AResCScriptList {
+  cs_id: string
+  name: string
+  description?: string
+  var_key: string
+  tag?: string
+}
+
+interface AResCScriptDetail {
+  cs_id: string
+  name: string
+  description?: string
+  var_key: string
+  var_script: string
+  tag?: string
 }
 
 interface ICScriptList {
@@ -32,8 +49,7 @@ interface ICScriptList {
 }
 
 interface ResponseCScriptLists {
-  cs: ICScriptList[]
-  total: number
+
 }
 
 interface ResponseCScriptList {

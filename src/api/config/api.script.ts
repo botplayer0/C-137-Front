@@ -1,5 +1,5 @@
 import http, { IResponse } from "@/utils/http";
-import type { RequestAddCScript, RequestPyScript, ResponseCScriptDetail, ResponseCScriptLists } from "./api.script.type";
+import type { ICScriptList, RequestAddCScript, RequestPyScript, ResponseCScriptDetail, ResponseCScriptLists } from "./api.script.type";
 
 export const apiAddCScript = async (params: RequestAddCScript) => {
   const response: ResponseCScriptDetail = await http.post("/common/cs/add", params)
@@ -12,7 +12,7 @@ export const apiCScriptList = async (page?: number, page_size?: number, tag?: st
     page_size: page_size ?? 20,
     tag
   }
-  const response = await http.get<IResponse<ResponseCScriptLists>>("/common/cs/list", { params })
+  const response = await http.get<IResponse<ICScriptList[]>>("/common/cs/list", { params })
   return response
 }
 

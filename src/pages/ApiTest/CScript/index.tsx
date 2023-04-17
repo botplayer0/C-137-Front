@@ -1,6 +1,7 @@
+import { apiCScriptList } from "@/api/config/api.script";
 import { ICScriptList } from "@/api/config/api.script.type";
 import { useApiScriptStore } from "@/store/api.script.store";
-import { message, Modal, Space, Table } from "antd";
+import { message, Modal, Popconfirm, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import CScriptModal from "./components/CScriptModal";
@@ -50,7 +51,7 @@ const CScript: React.FC = () => {
     pageSize?: number,
     tag?: string
   ) => {
-    const result = await apiGetScriptList(
+    const result = await apiCScriptList(
       (page = page),
       (pageSize = pageSize),
       tag
@@ -82,6 +83,26 @@ const CScript: React.FC = () => {
         </div>
       ),
     });
+  };
+
+  const handleUpdateScript = (data: any) => {
+    // 更新脚本
+    console.log(data);
+  };
+
+  const handleAddScript = (data: any) => {
+    // 新增脚本
+    console.log(data);
+  };
+
+  const handleDeleteScript = (cs_id: string) => {
+    // 删除脚本
+    console.log(cs_id);
+  };
+
+  const handleRunScriptByID = (cs_id: string) => {
+    // 通过cs_id调试脚本返回值
+    console.log(cs_id);
   };
 
   useEffect(() => {
@@ -116,7 +137,9 @@ const CScript: React.FC = () => {
         <Space size="middle">
           <a onClick={() => onClickEdit(record)}>编辑</a>
           <a onClick={() => handleDebugCScript(record)}>调试</a>
-          <a>删除</a>
+          <Popconfirm title="删除后无法恢复">
+            <a>删除</a>
+          </Popconfirm>
         </Space>
       ),
     },
@@ -125,6 +148,7 @@ const CScript: React.FC = () => {
   return (
     <div>
       <Table
+        rowKey={"cs_id"}
         columns={columns}
         dataSource={scriptList}
         pagination={{
@@ -135,7 +159,7 @@ const CScript: React.FC = () => {
             fetchScriptList(page, pageSzie);
           },
         }}
-      />
+      ></Table>
       <div>
         <button
           onClick={() => {
