@@ -13,7 +13,7 @@ interface IStoreProp {
 
   // 编辑时更新
   setCurrentScriptInfo: (record: StoreScriptDetail) => void
-  updateCurrentScriptInfo: (key: string, value: string) => void
+  updateCurrentScriptInfo: (updateKey: string, updateValue: string) => void
   clearCurrentScriptInfo: () => void
 
 }
@@ -26,9 +26,9 @@ const useScriptStore = create<IStoreProp>((set, get) => ({
   setCurrentScriptInfo: (record: StoreScriptDetail) => set({ currentScriptInfo: record }),
   clearCurrentScriptInfo: () => set({ currentScriptInfo: {} }),
   updateCurrentScriptInfo: (updateKey: string, updateValue: string) => {
-    const updateKeyValue = {
-      updateKey: updateValue
-    }
+    const updateKeyValue = {}
+    updateKeyValue[updateKey] = updateValue
+    console.log("33", updateKeyValue)
     set({ currentScriptInfo: { ...get().currentScriptInfo, ...updateKeyValue } })
   }
 

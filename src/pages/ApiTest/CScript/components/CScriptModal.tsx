@@ -27,15 +27,6 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
   const { currentScriptInfo, setCurrentScriptInfo, updateCurrentScriptInfo } =
     useScriptStore();
 
-  // 编辑表格数据, 用useState控制用于后续控制是否请求更新数据
-  const [fName, setFname] = useState(currentScriptInfo?.name || "");
-  const [fDesc, setFdesc] = useState(currentScriptInfo?.description || "");
-  const [fTag, setFtag] = useState(currentScriptInfo?.tag || "");
-  const [fVarKey, setFvarKey] = useState(currentScriptInfo?.var_key || "");
-  const [fVarScript, setFvarScript] = useState(
-    currentScriptInfo?.var_script || ""
-  );
-
   const showDebugModal = (varKey: string, infoMessage: any) => {
     Modal.info({
       title: "调试结果",
@@ -97,27 +88,28 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
         >
           <Form.Item label="脚本名">
             <Input
-              value={fName}
+              value={currentScriptInfo?.name}
               onChange={(e) => {
-                setFname(e.target.value);
+                console.log("111", e.target.value);
+                updateCurrentScriptInfo("name", e.target.value);
               }}
             />
           </Form.Item>
           <Form.Item label="描述">
             <TextArea
-              value={fDesc}
+              value={currentScriptInfo?.description}
               onChange={(e) => {
-                setFdesc(e.target.value);
+                updateCurrentScriptInfo("description", e.target.value);
               }}
             />
           </Form.Item>
 
           <Form.Item label="标签">
             <Input
-              value={fTag}
+              value={currentScriptInfo?.tag}
               placeholder="添加标签"
               onChange={(e) => {
-                setFtag(e.target.value);
+                updateCurrentScriptInfo("tag", e.target.value);
               }}
             />
           </Form.Item>
@@ -130,17 +122,17 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
             ]}
           >
             <Input
-              value={fVarKey}
+              value={currentScriptInfo?.var_key}
               onChange={(e) => {
-                setFvarKey(e.target.value);
+                updateCurrentScriptInfo("var_key", e.target.value);
               }}
             />
           </Form.Item>
           <Form.Item label="脚本">
             <div style={{ display: "flex" }}>
               <EditorPython
-                var_script={fVarScript}
-                setVarScript={setFvarScript}
+                var_script={currentScriptInfo?.var_script}
+                updateCurrentScriptInfo={updateCurrentScriptInfo}
               />
               <Button
                 icon={
