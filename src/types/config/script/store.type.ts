@@ -1,19 +1,19 @@
 export type StoreScriptList = {
-  cs_id: number | string
+  cs_id: number
   name: string
-  description: string
-  tag: string
+  description?: string
+  tag?: string
   var_key: string
 }
 
 
 export type StoreScriptDetail = {
-  cs_id?: number | string
-  name: string
-  description: string
-  tag: string
-  var_key: string
-  var_script: string
+  cs_id?: number
+  name?: string
+  description?: string
+  tag?: string
+  var_key?: string
+  var_script?: string
 }
 
 

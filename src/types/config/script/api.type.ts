@@ -26,22 +26,22 @@ export type ReqPyScript = {
 export type ResScriptList = {
   cs_id: number
   name: string
-  description?: string | "暂无描述"
-  tag?: string | "未知分类"
+  description?: string
+  tag?: string
   var_key: string
 }
 
 export type ResAddScript = {
   cs_id: number
   name: string
-  tag?: string | "未知分类"
+  tag?: string
 }
 
 export type ResScriptDetail = {
   cs_id: number
   name: string
-  description?: string | "暂无描述"
-  tag?: string | "未知分类"
+  description?: string
+  tag?: string
   var_key: string
   var_script: string
 }

@@ -1,4 +1,5 @@
 import { StoreScriptList, StoreScriptDetail, StoreEdit } from "@/types/config/script/store.type";
+import { create } from "zustand";
 
 
 interface IStoreProp {
@@ -11,8 +12,26 @@ interface IStoreProp {
   setScriptList: (data: StoreScriptList[]) => void
 
   // 编辑时更新
-  setCurrentScriptInfo: (record: StoreEdit) => void
+  setCurrentScriptInfo: (record: StoreScriptDetail) => void
+  updateCurrentScriptInfo: (key: string, value: string) => void
   clearCurrentScriptInfo: () => void
 
-
 }
+
+const useScriptStore = create<IStoreProp>((set, get) => ({
+  scriptList: [],
+  currentScriptInfo: {},
+
+  setScriptList: (data: StoreScriptList[]) => set({ scriptList: data }),
+  setCurrentScriptInfo: (record: StoreScriptDetail) => set({ currentScriptInfo: record }),
+  clearCurrentScriptInfo: () => set({ currentScriptInfo: {} }),
+  updateCurrentScriptInfo: (updateKey: string, updateValue: string) => {
+    const updateKeyValue = {
+      updateKey: updateValue
+    }
+    set({ currentScriptInfo: { ...get().currentScriptInfo, ...updateKeyValue } })
+  }
+
+}))
+
+export default useScriptStore

@@ -6,7 +6,7 @@ import AceEditor from "react-ace";
 
 interface IEditorProps {
   var_script?: string | null;
-  handleSetScript: (value: string) => void;
+  setVarScript: (value: string) => void;
 }
 
 const EditorPython: React.FC<IEditorProps> = (props) => {
@@ -20,8 +20,8 @@ const EditorPython: React.FC<IEditorProps> = (props) => {
     <AceEditor
       mode="python"
       theme="monokai"
-      value={props.var_script ?? code}
-      onChange={props.handleSetScript ?? handleCodeChange}
+      value={props.var_script}
+      onChange={props.setVarScript}
       name="python-editor"
       editorProps={{ $blockScrolling: true }}
       setOptions={{

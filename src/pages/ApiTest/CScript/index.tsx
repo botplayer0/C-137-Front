@@ -1,19 +1,15 @@
-import { apiCScriptList } from "@/api/config/api.script";
-import { ICScriptList } from "@/api/config/api.script.type";
-import { useApiScriptStore } from "@/store/api.script.store";
+import {
+  apiScriptDebugByID,
+  apiScriptDelete,
+  apiScriptDetail,
+  apiScriptList,
+} from "@/api/config/api.script1";
+import useScriptStore from "@/store/script.store";
+import { StoreScriptList } from "@/types/config/script/store.type";
 import { message, Modal, Popconfirm, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import CScriptModal from "./components/CScriptModal";
-
-interface DataType {
-  cs_id: string;
-  name: string;
-  desc?: string;
-  tags?: string;
-  var_script?: string;
-  var_key?: string;
-}
 
 interface IModalInfo {
   [key: string]: any;
@@ -21,41 +17,29 @@ interface IModalInfo {
 
 const CScript: React.FC = () => {
   const [open, setOpen] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [tableTotal, setTableTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const PAGE_SIZE = 20;
 
   const {
     scriptList,
-    apiGetScriptList,
     setScriptList,
-    apiGetScriptDetail,
-    apiDebugCScript,
-    scriptInfo,
-    setScriptInfo,
-    clearScriptInfo,
-  } = useApiScriptStore();
-
-  const onClickEdit = async (record: ICScriptList) => {
-    const fetchCSDetail = await apiGetScriptDetail(record.cs_id);
-    if (fetchCSDetail.code === 0) {
-      setScriptInfo(fetchCSDetail.data);
-    } else {
-      clearScriptInfo();
-    }
-    setOpen(true);
-  };
+    setCurrentScriptInfo,
+    clearCurrentScriptInfo,
+  } = useScriptStore();
 
   const fetchScriptList = async (
     page?: number,
     pageSize?: number,
     tag?: string
   ) => {
-    const result = await apiCScriptList(
+    const result = await apiScriptList(
       (page = page),
       (pageSize = pageSize),
       tag
     );
+    console.log(result);
     if (result.code === 0) {
       setScriptList(result.data);
       setTableTotal(result.total ?? 0);
@@ -63,15 +47,9 @@ const CScript: React.FC = () => {
     }
   };
 
-  const handleDebugCScript = async (record: DataType) => {
-    const result = await apiDebugCScript(parseInt(record.cs_id));
-    if (result.code === 0) {
-      debugInfo(record.var_key, result.data);
-      // message.success(JSON.stringify(result.data));
-    } else {
-      message.error(result.error_msg);
-    }
-  };
+  useEffect(() => {
+    fetchScriptList();
+  }, []);
 
   const debugInfo = (varKey: string, infoMessage: IModalInfo) => {
     Modal.info({
@@ -95,21 +73,40 @@ const CScript: React.FC = () => {
     console.log(data);
   };
 
-  const handleDeleteScript = (cs_id: string) => {
+  const handleDeleteScript = async (cs_id: number) => {
     // 删除脚本
+    const delScript = await apiScriptDelete(cs_id, {});
+    if (delScript.code === 0) {
+      // 删除成功后只fillter掉, 不用重复请求接口先
+      setScriptList(scriptList.filter((item) => item.cs_id != cs_id));
+    } else {
+      message.error(`删除脚本失败, ${delScript.error_msg}`);
+    }
     console.log(cs_id);
   };
 
-  const handleRunScriptByID = (cs_id: string) => {
+  const handleRunScriptByID = async (record: StoreScriptList) => {
     // 通过cs_id调试脚本返回值
-    console.log(cs_id);
+    const result = await apiScriptDebugByID(record.cs_id);
+    if (result.code === 0) {
+      debugInfo(record.var_key, result.data);
+    } else {
+      message.error(result.error_msg);
+    }
   };
 
-  useEffect(() => {
-    fetchScriptList();
-  }, []);
+  const handleEditScript = async (record: StoreScriptList) => {
+    const fetchCSDetail = await apiScriptDetail(record.cs_id);
+    if (fetchCSDetail.code === 0) {
+      setIsEdit(true);
+      setCurrentScriptInfo(fetchCSDetail.data);
+      setOpen(true);
+    } else {
+      message.error(fetchCSDetail.error_msg);
+    }
+  };
 
-  const columns: ColumnsType<DataType> = [
+  const columns: ColumnsType<StoreScriptList> = [
     {
       title: "脚本名",
       dataIndex: "name",
@@ -135,10 +132,10 @@ const CScript: React.FC = () => {
       width: "10%",
       render: (_, record) => (
         <Space size="middle">
-          <a onClick={() => onClickEdit(record)}>编辑</a>
-          <a onClick={() => handleDebugCScript(record)}>调试</a>
+          <a onClick={() => handleEditScript(record)}>编辑</a>
+          <a onClick={() => handleRunScriptByID(record)}>调试</a>
           <Popconfirm title="删除后无法恢复">
-            <a>删除</a>
+            <a onClick={() => handleDeleteScript(record.cs_id)}>删除</a>
           </Popconfirm>
         </Space>
       ),
@@ -163,14 +160,20 @@ const CScript: React.FC = () => {
       <div>
         <button
           onClick={() => {
-            clearScriptInfo();
+            clearCurrentScriptInfo();
+            setIsEdit(false);
             setOpen(true);
           }}
         >
           Button
         </button>
       </div>
-      <CScriptModal open={open} setOpen={setOpen} />
+      <CScriptModal
+        open={open}
+        setOpen={setOpen}
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+      />
     </div>
   );
 };

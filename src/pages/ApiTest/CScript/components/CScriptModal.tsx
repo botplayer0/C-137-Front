@@ -1,5 +1,6 @@
+import { apiScriptDebugByTxt } from "@/api/config/api.script1";
 import EditorPython from "@/components/Editor/EditorPython";
-import { useApiScriptStore } from "@/store/api.script.store";
+import useScriptStore from "@/store/script.store";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal } from "antd";
 import TextArea from "antd/lib/input/TextArea";
@@ -16,16 +17,26 @@ interface DataType {
 interface IModalProps {
   open: boolean;
   setOpen: (status: boolean) => void;
+  isEdit: boolean;
+  setIsEdit: (edit: boolean) => void;
   editorValue?: DataType;
 }
 
 const CScriptModal: React.FC<IModalProps> = (props) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const { scriptInfo, setScriptInfo, updateScript, apiPostDebugPyScript } =
-    useApiScriptStore();
+  const { currentScriptInfo, setCurrentScriptInfo, updateCurrentScriptInfo } =
+    useScriptStore();
 
-  const debugInfo = (varKey: string, infoMessage: any) => {
-    console.log("1", infoMessage);
+  // 编辑表格数据, 用useState控制用于后续控制是否请求更新数据
+  const [fName, setFname] = useState(currentScriptInfo?.name || "");
+  const [fDesc, setFdesc] = useState(currentScriptInfo?.description || "");
+  const [fTag, setFtag] = useState(currentScriptInfo?.tag || "");
+  const [fVarKey, setFvarKey] = useState(currentScriptInfo?.var_key || "");
+  const [fVarScript, setFvarScript] = useState(
+    currentScriptInfo?.var_script || ""
+  );
+
+  const showDebugModal = (varKey: string, infoMessage: any) => {
     Modal.info({
       title: "调试结果",
       content: (
@@ -38,6 +49,11 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
   };
 
   const handleOK = () => {
+    if (props.isEdit) {
+      console.log("编辑");
+    } else {
+      console.log("新增");
+    }
     setConfirmLoading(true);
     setTimeout(() => {
       props.setOpen(false);
@@ -49,13 +65,16 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
   };
 
   const handleDebugTempScript = async () => {
-    if (!scriptInfo.var_key) {
+    if (!currentScriptInfo.var_key) {
       console.log("缺少var_key");
     }
-    const data = { get_var: scriptInfo.var_key, script: scriptInfo.var_script };
-    const res = await apiPostDebugPyScript(data);
+    const data = {
+      get_var: currentScriptInfo.var_key,
+      script: currentScriptInfo.var_script,
+    };
+    const res = await apiScriptDebugByTxt(data);
     if (res.code === 0) {
-      debugInfo(scriptInfo.var_key, res.data);
+      showDebugModal(currentScriptInfo.var_key, res.data);
     }
   };
 
@@ -78,20 +97,31 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
         >
           <Form.Item label="脚本名">
             <Input
-              value={scriptInfo?.name || ""}
+              value={fName}
               onChange={(e) => {
-                setScriptInfo({ ...scriptInfo, name: e.target.value });
+                setFname(e.target.value);
               }}
             />
           </Form.Item>
           <Form.Item label="描述">
             <TextArea
-              value={scriptInfo?.description || ""}
+              value={fDesc}
               onChange={(e) => {
-                setScriptInfo({ ...scriptInfo, description: e.target.value });
+                setFdesc(e.target.value);
               }}
             />
           </Form.Item>
+
+          <Form.Item label="标签">
+            <Input
+              value={fTag}
+              placeholder="添加标签"
+              onChange={(e) => {
+                setFtag(e.target.value);
+              }}
+            />
+          </Form.Item>
+
           <Form.Item
             label="变量名"
             rules={[
@@ -100,17 +130,17 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
             ]}
           >
             <Input
-              value={scriptInfo?.var_key || ""}
+              value={fVarKey}
               onChange={(e) => {
-                setScriptInfo({ ...scriptInfo, var_key: e.target.value });
+                setFvarKey(e.target.value);
               }}
             />
           </Form.Item>
           <Form.Item label="脚本">
             <div style={{ display: "flex" }}>
               <EditorPython
-                var_script={scriptInfo?.var_script || ""}
-                handleSetScript={updateScript}
+                var_script={fVarScript}
+                setVarScript={setFvarScript}
               />
               <Button
                 icon={
