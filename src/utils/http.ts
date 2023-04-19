@@ -31,6 +31,7 @@ class HttpClient {
     })
 
     this.instance.defaults.withCredentials = true;
+    this.history = createBrowserHistory()
 
     this.instance.interceptors.request.use(this.handleRequest)
     this.instance.interceptors.response.use(this.handleResponse, this.handleError);
@@ -39,7 +40,7 @@ class HttpClient {
 
   private handleRequest = (config: InternalAxiosRequestConfig<AxiosRequestConfig>): InternalAxiosRequestConfig<AxiosRequestConfig> => {
     // 当登录或者注册时, header中无需 Authorization
-    if (!config.url?.match(/\/(login|register|refresh)$/)) {
+    if (!config.url?.match(/\/(login|register)$/)) {
       const token = useAuthStore.getState().getToken.token || 'null'
       if (token) {
         config.headers.Authorization = `${token}`
@@ -58,15 +59,24 @@ class HttpClient {
     return response
   }
 
-  private handleError = (error: any): Promise<any> => {
+  private handleError = async (error: any): Promise<any> => {
     console.log("here", error)
     if (error.code === "ERR_NETWORK") {
       message.error(`网络异常`)
     }
     // 处理状态码==400
     else if (error.response && error.response.status === 401) {
-      this.history.push("/login")
-      message.error(error.response.data.error_msg || error.message || "请求出错了")
+      message.error(`Token已失效`)
+      // try {
+      //   const { data } = await this.instance.post<IResponse>("/auth/refresh")
+      //   console.log(data)
+      //   message.success("刷新Token成功~")
+      // } catch (err) {
+      //   console.log(err)
+      //   this.history.push("/login")
+      //   message.error("刷新Token失败, 请重新登录")
+      //   throw err
+      // }
     } else {
       message.error(error.response.data.error_msg || error.message || "请求出错了")
     }
