@@ -1,6 +1,7 @@
 import { apiScriptDebugByTxt } from "@/api/config/api.script1";
 import EditorPython from "@/components/Editor/EditorPython";
 import useScriptStore from "@/store/script.store";
+import { showDebugModal } from "@/utils/showDebugModal";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { Button, Form, Input, Modal } from "antd";
 import TextArea from "antd/lib/input/TextArea";
@@ -26,25 +27,6 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const { currentScriptInfo, setCurrentScriptInfo, updateCurrentScriptInfo } =
     useScriptStore();
-
-  const showDebugModal = (varKey: string, infoMessage: any) => {
-    // 序列化
-    let serializedValue = infoMessage[varKey];
-    try {
-      serializedValue = JSON.stringify(serializedValue);
-    } catch (err) {
-      serializedValue = infoMessage[varKey];
-    }
-    Modal.info({
-      title: "调试结果",
-      content: (
-        <div>
-          <p>提取变量: {varKey}</p>
-          <p>返回结果: {serializedValue}</p>
-        </div>
-      ),
-    });
-  };
 
   const handleOK = () => {
     if (props.isEdit) {
@@ -138,7 +120,7 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
           <Form.Item label="脚本">
             <div style={{ display: "flex" }}>
               <EditorPython
-                var_script={currentScriptInfo?.var_script}
+                var_script={currentScriptInfo?.var_script || ""}
                 updateCurrentScriptInfo={updateCurrentScriptInfo}
               />
               <Button

@@ -12,9 +12,11 @@ const showDebugModal = (varKey: string, infoMessage: any) => {
     title: "调试结果",
     content: (
       <div>
-      <p>提取变量: { varKey } < /p>
-      < p > 返回结果: { serializedValue } < /p>
-  < /div>
-  ),
+        <p>提取变量: {varKey} </p>
+        <p> 返回结果: {serializedValue} </p>
+      </div>
+    ),
   });
 };
+
+export { showDebugModal };

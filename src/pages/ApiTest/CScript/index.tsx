@@ -3,10 +3,12 @@ import {
   apiScriptDelete,
   apiScriptDetail,
   apiScriptList,
+  apiScriptTags,
 } from "@/api/config/api.script1";
 import useScriptStore from "@/store/script.store";
 import { StoreScriptList } from "@/types/config/script/store.type";
-import { message, Modal, Popconfirm, Space, Table } from "antd";
+import { showDebugModal } from "@/utils/showDebugModal";
+import { Button, message, Popconfirm, Select, Space, Table } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import React, { useEffect, useState } from "react";
 import CScriptModal from "./components/CScriptModal";
@@ -20,6 +22,8 @@ const CScript: React.FC = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [tableTotal, setTableTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [tagLoading, setTagLoding] = useState<boolean>(true);
+  const [tagList, setTagList] = useState([]);
   const PAGE_SIZE = 20;
 
   const {
@@ -39,7 +43,6 @@ const CScript: React.FC = () => {
       (pageSize = pageSize),
       tag
     );
-    console.log(result);
     if (result.code === 0) {
       setScriptList(result.data);
       setTableTotal(result.total ?? 0);
@@ -47,20 +50,24 @@ const CScript: React.FC = () => {
     }
   };
 
+  const fetchScriptTags = async () => {
+    setTagLoding(true);
+    const result = await apiScriptTags();
+    if (result.code === 0) {
+      setTagList(
+        ["所有", ...result.data].map((item) => ({ value: item, lable: item }))
+      );
+    }
+    setTagLoding(false);
+  };
+
   useEffect(() => {
-    fetchScriptList();
+    fetchScriptTags();
+    fetchScriptList(currentPage, PAGE_SIZE, "所有");
   }, []);
 
-  const debugInfo = (varKey: string, infoMessage: IModalInfo) => {
-    Modal.info({
-      title: "调试结果",
-      content: (
-        <div>
-          <p>提取变量: {varKey}</p>
-          <p>返回结果: {JSON.stringify(infoMessage[varKey])}</p>
-        </div>
-      ),
-    });
+  const handleFilterTag = async (tag: string) => {
+    await fetchScriptList(currentPage, PAGE_SIZE, tag);
   };
 
   const handleUpdateScript = (data: any) => {
@@ -89,7 +96,7 @@ const CScript: React.FC = () => {
     // 通过cs_id调试脚本返回值
     const result = await apiScriptDebugByID(record.cs_id);
     if (result.code === 0) {
-      debugInfo(record.var_key, result.data);
+      showDebugModal(record.var_key, result.data);
     } else {
       message.error(result.error_msg);
     }
@@ -144,6 +151,27 @@ const CScript: React.FC = () => {
 
   return (
     <div>
+      <Space style={{ float: "right" }}>
+        <Select
+          defaultValue="所有"
+          style={{ width: 120 }}
+          loading={tagLoading}
+          options={tagList}
+          onChange={handleFilterTag}
+        />
+        <Button
+          type="primary"
+          onClick={() => {
+            clearCurrentScriptInfo();
+            setIsEdit(false);
+            setOpen(true);
+          }}
+        >
+          新建 +
+        </Button>
+      </Space>
+      <br />
+      <br />
       <Table
         rowKey={"cs_id"}
         columns={columns}
@@ -157,17 +185,7 @@ const CScript: React.FC = () => {
           },
         }}
       ></Table>
-      <div>
-        <button
-          onClick={() => {
-            clearCurrentScriptInfo();
-            setIsEdit(false);
-            setOpen(true);
-          }}
-        >
-          Button
-        </button>
-      </div>
+
       <CScriptModal
         open={open}
         setOpen={setOpen}

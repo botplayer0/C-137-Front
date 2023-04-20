@@ -32,6 +32,10 @@ export const apiScriptList = async (page?: number, page_size?: number, tag?: str
   return response
 }
 
+export const apiScriptTags = async () => {
+  const response = await http.get<string[]>("/common/cs/tag")
+  return response
+}
 
 // 获取脚本详情, 主要是获取代码
 export const apiScriptDetail = async (cs_id: number) => {
