@@ -4,7 +4,7 @@ import {
   apiScriptDetail,
   apiScriptList,
   apiScriptTags,
-} from "@/api/config/api.script1";
+} from "@/api/config/api.script";
 import useScriptStore from "@/store/script.store";
 import { StoreScriptList } from "@/types/config/script/store.type";
 import { showDebugModal } from "@/utils/showDebugModal";

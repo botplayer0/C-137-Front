@@ -1,4 +1,5 @@
 import CScript from "@/pages/ApiTest/CScript";
+import EnvSetting from "@/pages/Settings/EnvSetting";
 import {
   ApiOutlined,
   BarChartOutlined,
@@ -78,7 +79,7 @@ export const routeConfig = {
             path: "/config/envs",
             name: "环境配置",
             icon: <BarChartOutlined />,
-            component: <div>1</div>,
+            component: <EnvSetting />,
           },
         ],
       },

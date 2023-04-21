@@ -1,4 +1,4 @@
-import { apiScriptDebugByTxt } from "@/api/config/api.script1";
+import { apiScriptDebugByTxt } from "@/api/config/api.script";
 import EditorPython from "@/components/Editor/EditorPython";
 import useScriptStore from "@/store/script.store";
 import { showDebugModal } from "@/utils/showDebugModal";

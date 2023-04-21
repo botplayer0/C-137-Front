@@ -78,11 +78,8 @@ interface ResponseCScriptDetail extends IResponse<{
 
 
 export type {
-  RequestAddCScript,
   ICScriptList,
   ResponseCScriptLists,
-  RequestUpdateCScript,
   ResponseCScriptDetail,
-  ResponseCScriptList,
-  RequestPyScript
+  ResponseCScriptList
 }
