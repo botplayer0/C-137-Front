@@ -1,3 +1,4 @@
+import ApiCase from "@/pages/ApiTest/ApiCase";
 import CScript from "@/pages/ApiTest/CScript";
 import EnvSetting from "@/pages/Settings/EnvSetting";
 import {
@@ -93,7 +94,7 @@ export const routeConfig = {
             path: "/apitest/testcase",
             name: "测试用例",
             icon: <BarsOutlined />,
-            component: <div>1</div>,
+            component: <ApiCase />,
           },
           {
             path: "/apitest/plan",

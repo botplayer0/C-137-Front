@@ -2,7 +2,7 @@ import { StoreScriptList, StoreScriptDetail, StoreEdit } from "@/types/config/sc
 import { create } from "zustand";
 
 
-interface IStoreProp {
+interface IScriptStoreProp {
   // 脚本列表, 接口获取
   scriptList: StoreScriptList[]
   // 当前编辑脚本或新建脚本
@@ -18,7 +18,7 @@ interface IStoreProp {
 
 }
 
-const useScriptStore = create<IStoreProp>((set, get) => ({
+const useScriptStore = create<IScriptStoreProp>((set, get) => ({
   scriptList: [],
   currentScriptInfo: {},
 
