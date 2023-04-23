@@ -24,45 +24,44 @@ export default () => {
   ];
   return (
     <>
-      <Row>
-        <Col span={4} style={{ alignSelf: "center" }}>
+      {/* {gutter[0] == 横向间距 gutter[1] == 纵向间距} */}
+      <Row gutter={[8, 24]}>
+        <Col span={6} style={{ alignSelf: "center" }}>
           用例名称:
         </Col>
-        <Col span={4} style={{ alignSelf: "center" }}>
-          请求类型:
-        </Col>
-        <Col span={4} style={{ alignSelf: "center" }}>
-          请求url:
-        </Col>
-      </Row>
-      <Row>
-        <Col span={4} style={{ alignSelf: "center" }}>
+        <Col span={6} style={{ alignSelf: "center" }}>
           请求方式:
         </Col>
-        <Col span={4} style={{ alignSelf: "center" }}>
+        <Col span={12} style={{ alignSelf: "center" }}>
+          请求url:
+        </Col>
+        <Col span={6} style={{ alignSelf: "center" }}>
+          请求类型:
+        </Col>
+        <Col span={6} style={{ alignSelf: "center" }}>
           用例等级:
         </Col>
-        <Col span={4} style={{ alignSelf: "center" }}>
+        <Col span={6} style={{ alignSelf: "center" }}>
           用例状态:
         </Col>
-        <Col span={4} style={{ alignSelf: "center" }}>
+        <Col span={6} style={{ alignSelf: "center" }}>
           用例标签:
         </Col>
-      </Row>
-      <Row>
-        <Col span={4} style={{ alignSelf: "center" }}>
+
+        <Col span={6} style={{ alignSelf: "center" }}>
           创建人:
         </Col>
-        <Col span={4} style={{ alignSelf: "center" }}>
+        <Col span={6} style={{ alignSelf: "center" }}>
           更新人:
         </Col>
-        <Col span={4} style={{ alignSelf: "center" }}>
+        <Col span={6} style={{ alignSelf: "center" }}>
           创建时间:
         </Col>
-        <Col span={4} style={{ alignSelf: "center" }}>
+        <Col span={6} style={{ alignSelf: "center" }}>
           更新时间:
         </Col>
       </Row>
+      <br />
       <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
     </>
   );
