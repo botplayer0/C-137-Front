@@ -25,7 +25,6 @@ interface ResProjectList {
   project_name: string
   desc?: string
   create_user: number
-  public: boolean
   user_name: string
   updated_at: number
 }

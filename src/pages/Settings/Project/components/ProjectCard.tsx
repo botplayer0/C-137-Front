@@ -3,9 +3,8 @@ import { Card } from "antd";
 interface IProjectCard {
   projectName: string;
   projectDesc?: string;
-  create_at: number;
-  creator: number;
-  public: boolean;
+  updated_at: number;
+  creator: string;
 }
 
 export default (props: IProjectCard) => {
@@ -17,7 +16,7 @@ export default (props: IProjectCard) => {
     >
       <p>{props?.projectDesc || "暂无描述"}</p>
       <p>创建人: {props.creator}</p>
-      <p>创建时间: {props.create_at}</p>
+      <p>最后更新时间: {props.updated_at}</p>
     </Card>
   );
 };
