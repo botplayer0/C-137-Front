@@ -1,6 +1,7 @@
 import ApiCase from "@/pages/ApiTest/ApiCase";
 import CScript from "@/pages/ApiTest/CScript";
 import EnvSetting from "@/pages/Settings/EnvSetting";
+import Project from "@/pages/Settings/Project";
 import {
   ApiOutlined,
   BarChartOutlined,
@@ -74,7 +75,7 @@ export const routeConfig = {
             path: "/config/project",
             name: "项目配置",
             icon: <UserOutlined />,
-            component: <div>project</div>,
+            component: <Project />,
           },
           {
             path: "/config/envs",
