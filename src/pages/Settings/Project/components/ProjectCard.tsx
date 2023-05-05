@@ -13,7 +13,6 @@ export default (props: IProjectCard) => {
   return (
     <Card
       title={props.projectName}
-      extra={<a href="#">More</a>}
       style={{ width: 300 }}
       key={props.projectId}
     >

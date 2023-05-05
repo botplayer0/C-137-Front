@@ -4,7 +4,7 @@ import { create } from "zustand"
 
 interface IProjectStoreProp {
   projectList: ResProjectList[],
-  projectDirectory: []
+  projectDirectoryTree: []
 
   setProjectList: (data: ResProjectList[]) => void
   fetchProjectList: () => void
@@ -12,7 +12,7 @@ interface IProjectStoreProp {
 
 const useProjectStore = create<IProjectStoreProp>((set, get) => ({
   projectList: [],
-  projectDirectory: [],
+  projectDirectoryTree: [],
 
   setProjectList: (data: ResProjectList[]) => set({ projectList: data }),
   fetchProjectList: async () => {

@@ -14,7 +14,6 @@ export default () => {
 
   return (
     <Select
-      defaultValue={projectList.length !== 0 ? projectList[0].project_name : ""}
       style={{ width: "100%" }}
       suffixIcon={<MenuOutlined />}
       options={projectList.map((item) => {

@@ -1,11 +1,41 @@
+import { apiDirectoryRoot } from "@/api/project/api.project.dir";
+import {
+  convertResDirectoryToTreeNode,
+  useDirectoryStore,
+} from "@/store/directory.store";
 import { ProCard } from "@ant-design/pro-components";
 import { Col, Row } from "antd";
+import { useEffect, useState } from "react";
 import CaseDetail from "./components/CaseDetail";
 import CaseTree from "./components/CaseTree";
 import ProjectSelector from "./components/ProjectSelector";
 import "./index.css";
+import { IProjectSelectorType } from "./types/project.selector";
 
 export default () => {
+  const { treeData, setTreeData } = useDirectoryStore();
+  // 控制当前项目
+  const [currentProject, setCurrentProject] = useState<IProjectSelectorType>({
+    value: "",
+    label: "",
+    projectId: 0,
+  });
+
+  const fetchProjectRoot = async (projectId: number) => {
+    const response = await apiDirectoryRoot(projectId);
+    if (response) {
+      const treeNodes = convertResDirectoryToTreeNode(response.data);
+      setTreeData(treeNodes);
+    }
+  };
+
+  // 控制当前树
+  useEffect(() => {
+    fetchProjectRoot(1);
+  }, []);
+
+  // 控制详情页
+
   return (
     <ProCard split="vertical" style={{ height: "80vh" }}>
       <ProCard

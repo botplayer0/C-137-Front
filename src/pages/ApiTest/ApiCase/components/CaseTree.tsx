@@ -1,6 +1,53 @@
+import { useDirectoryStore } from "@/store/directory.store";
 import { Input, Tree } from "antd";
 import type { DataNode } from "antd/es/tree";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
+
+const dd = [
+  {
+    key: "dir_1",
+    title: "Root",
+    type: "directory",
+    children: [
+      {
+        key: "dir_2",
+        title: "Directory 1",
+        type: "directory",
+        children: [
+          {
+            key: "dir_3",
+            title: "Directory 1.1",
+            type: "directory",
+            isLeaf: true,
+          },
+          {
+            key: "dir_4",
+            title: "Directory 1.2",
+            type: "directory",
+            children: [
+              {
+                key: "dir_5",
+                title: "Directory 1.2.1",
+                type: "directory",
+                isLeaf: true,
+              },
+              {
+                key: "case_1",
+                title: "Case 1",
+                type: "case",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        key: "case_2",
+        title: "Case 2",
+        type: "case",
+      },
+    ],
+  },
+];
 
 const { Search } = Input;
 
@@ -68,6 +115,7 @@ const CaseTree: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [autoExpandParent, setAutoExpandParent] = useState(true);
+  const { treeData } = useDirectoryStore();
 
   const onExpand = (newExpandedKeys: React.Key[]) => {
     setExpandedKeys(newExpandedKeys);
@@ -89,35 +137,37 @@ const CaseTree: React.FC = () => {
     setAutoExpandParent(true);
   };
 
-  const treeData = useMemo(() => {
-    const loop = (data: DataNode[]): DataNode[] =>
-      data.map((item) => {
-        const strTitle = item.title as string;
-        const index = strTitle.indexOf(searchValue);
-        const beforeStr = strTitle.substring(0, index);
-        const afterStr = strTitle.slice(index + searchValue.length);
-        const title =
-          index > -1 ? (
-            <span>
-              {beforeStr}
-              <span className="site-tree-search-value">{searchValue}</span>
-              {afterStr}
-            </span>
-          ) : (
-            <span>{strTitle}</span>
-          );
-        if (item.children) {
-          return { title, key: item.key, children: loop(item.children) };
-        }
+  // const treeData = useMemo(() => {
+  //   const loop = (data: DataNode[]): DataNode[] =>
+  //     data.map((item) => {
+  //       const strTitle = item.title as string;
+  //       const index = strTitle.indexOf(searchValue);
+  //       const beforeStr = strTitle.substring(0, index);
+  //       const afterStr = strTitle.slice(index + searchValue.length);
+  //       const title =
+  //         index > -1 ? (
+  //           <span>
+  //             {beforeStr}
+  //             <span className="site-tree-search-value">{searchValue}</span>
+  //             {afterStr}
+  //           </span>
+  //         ) : (
+  //           <span>{strTitle}</span>
+  //         );
+  //       if (item.children) {
+  //         return { title, key: item.key, children: loop(item.children) };
+  //       }
 
-        return {
-          title,
-          key: item.key,
-        };
-      });
+  //       return {
+  //         title,
+  //         key: item.key,
+  //       };
+  //     });
 
-    return loop(defaultData);
-  }, [searchValue]);
+  //   return loop(defaultData);
+  // }, [searchValue]);
+
+  console.log("11", treeData);
 
   return (
     <div>
