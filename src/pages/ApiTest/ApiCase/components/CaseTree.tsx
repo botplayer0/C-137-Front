@@ -1,123 +1,20 @@
 import { useDirectoryStore } from "@/store/directory.store";
 import { Input, Tree } from "antd";
-import type { DataNode } from "antd/es/tree";
 import React, { useState } from "react";
 
-const dd = [
-  {
-    key: "dir_1",
-    title: "Root",
-    type: "directory",
-    children: [
-      {
-        key: "dir_2",
-        title: "Directory 1",
-        type: "directory",
-        children: [
-          {
-            key: "dir_3",
-            title: "Directory 1.1",
-            type: "directory",
-            isLeaf: true,
-          },
-          {
-            key: "dir_4",
-            title: "Directory 1.2",
-            type: "directory",
-            children: [
-              {
-                key: "dir_5",
-                title: "Directory 1.2.1",
-                type: "directory",
-                isLeaf: true,
-              },
-              {
-                key: "case_1",
-                title: "Case 1",
-                type: "case",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        key: "case_2",
-        title: "Case 2",
-        type: "case",
-      },
-    ],
-  },
-];
-
 const { Search } = Input;
-
-const x = 3;
-const y = 2;
-const z = 1;
-const defaultData: DataNode[] = [];
-
-const generateData = (
-  _level: number,
-  _preKey?: React.Key,
-  _tns?: DataNode[]
-) => {
-  const preKey = _preKey || "0";
-  const tns = _tns || defaultData;
-
-  const children: React.Key[] = [];
-  for (let i = 0; i < x; i++) {
-    const key = `${preKey}-${i}`;
-    tns.push({ title: key, key });
-    if (i < y) {
-      children.push(key);
-    }
-  }
-  if (_level < 0) {
-    return tns;
-  }
-  const level = _level - 1;
-  children.forEach((key, index) => {
-    tns[index].children = [];
-    return generateData(level, key, tns[index].children);
-  });
-};
-generateData(z);
-
-const dataList: { key: React.Key; title: string }[] = [];
-const generateList = (data: DataNode[]) => {
-  for (let i = 0; i < data.length; i++) {
-    const node = data[i];
-    const { key } = node;
-    dataList.push({ key, title: key as string });
-    if (node.children) {
-      generateList(node.children);
-    }
-  }
-};
-generateList(defaultData);
-
-const getParentKey = (key: React.Key, tree: DataNode[]): React.Key => {
-  let parentKey: React.Key;
-  for (let i = 0; i < tree.length; i++) {
-    const node = tree[i];
-    if (node.children) {
-      if (node.children.some((item) => item.key === key)) {
-        parentKey = node.key;
-      } else if (getParentKey(key, node.children)) {
-        parentKey = getParentKey(key, node.children);
-      }
-    }
-  }
-  return parentKey!;
-};
 
 const CaseTree: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [searchValue, setSearchValue] = useState("");
   const [autoExpandParent, setAutoExpandParent] = useState(true);
-  const { treeData } = useDirectoryStore();
+  const { treeData, setTreeByExpand } = useDirectoryStore();
 
-  const onExpand = (newExpandedKeys: React.Key[]) => {
+  const onExpand = (newExpandedKeys: React.Key[], info) => {
+    if (info.expanded) {
+      setTreeByExpand(1, info.node.directoryId);
+    }
+    console.log("what", treeData);
     setExpandedKeys(newExpandedKeys);
     setAutoExpandParent(false);
   };
@@ -137,37 +34,7 @@ const CaseTree: React.FC = () => {
     setAutoExpandParent(true);
   };
 
-  // const treeData = useMemo(() => {
-  //   const loop = (data: DataNode[]): DataNode[] =>
-  //     data.map((item) => {
-  //       const strTitle = item.title as string;
-  //       const index = strTitle.indexOf(searchValue);
-  //       const beforeStr = strTitle.substring(0, index);
-  //       const afterStr = strTitle.slice(index + searchValue.length);
-  //       const title =
-  //         index > -1 ? (
-  //           <span>
-  //             {beforeStr}
-  //             <span className="site-tree-search-value">{searchValue}</span>
-  //             {afterStr}
-  //           </span>
-  //         ) : (
-  //           <span>{strTitle}</span>
-  //         );
-  //       if (item.children) {
-  //         return { title, key: item.key, children: loop(item.children) };
-  //       }
-
-  //       return {
-  //         title,
-  //         key: item.key,
-  //       };
-  //     });
-
-  //   return loop(defaultData);
-  // }, [searchValue]);
-
-  console.log("11", treeData);
+  console.log("11", JSON.stringify(treeData));
 
   return (
     <div>
@@ -179,7 +46,7 @@ const CaseTree: React.FC = () => {
       <Tree
         onExpand={onExpand}
         expandedKeys={expandedKeys}
-        autoExpandParent={autoExpandParent}
+        // autoExpandParent={autoExpandParent}
         treeData={treeData}
       />
     </div>

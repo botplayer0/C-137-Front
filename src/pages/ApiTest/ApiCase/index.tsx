@@ -1,8 +1,5 @@
 import { apiDirectoryRoot } from "@/api/project/api.project.dir";
-import {
-  convertResDirectoryToTreeNode,
-  useDirectoryStore,
-} from "@/store/directory.store";
+import { useDirectoryStore } from "@/store/directory.store";
 import { ProCard } from "@ant-design/pro-components";
 import { Col, Row } from "antd";
 import { useEffect, useState } from "react";
@@ -13,7 +10,7 @@ import "./index.css";
 import { IProjectSelectorType } from "./types/project.selector";
 
 export default () => {
-  const { treeData, setTreeData } = useDirectoryStore();
+  const { treeData, setTreeData, setRootTree } = useDirectoryStore();
   // 控制当前项目
   const [currentProject, setCurrentProject] = useState<IProjectSelectorType>({
     value: "",
@@ -24,8 +21,7 @@ export default () => {
   const fetchProjectRoot = async (projectId: number) => {
     const response = await apiDirectoryRoot(projectId);
     if (response) {
-      const treeNodes = convertResDirectoryToTreeNode(response.data);
-      setTreeData(treeNodes);
+      setRootTree(response.data);
     }
   };
 

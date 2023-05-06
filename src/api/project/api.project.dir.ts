@@ -12,8 +12,8 @@ const apiDirectoryRoot = async (projectId: number) => {
   return response
 }
 
-const apiDirectoryChild = async (directoryId: number) => {
-  const response = await http.get<ResDirectory[]>(`/project/directory/${directoryId}/child`)
+const apiDirectoryChild = async (projectId: number, directoryId: number) => {
+  const response = await http.get<ResDirectory[]>(`/project/directory/${projectId}/root/${directoryId}`)
   return response
 }
 

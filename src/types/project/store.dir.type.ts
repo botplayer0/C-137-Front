@@ -6,6 +6,7 @@ interface TreeNode {
   isLeaf?: boolean;
   directoryId?: number
   caseId?: number
+  parentId?: number
   method?: string
 }
 
