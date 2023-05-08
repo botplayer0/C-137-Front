@@ -2,10 +2,12 @@ import {
   apiDirectoryChild,
   apiDirectoryRoot,
 } from "@/api/project/api.project.dir";
+import MethodTag from "@/components/MethodTag";
 import { ResDirectory } from "@/types/project/api.dir.type";
 import { TreeNode } from "@/types/project/store.dir.type";
 import { Tree } from "antd";
 import React, { useEffect, useState } from "react";
+import "./CaseTree.css";
 
 const converResToTreeNode = (res: ResDirectory): TreeNode => {
   // 转化响应成树节点
@@ -22,6 +24,7 @@ const converResToTreeNode = (res: ResDirectory): TreeNode => {
     directoryId: res.directory_id,
     parentId: res.type === "case" ? res.directory_id : res?.parent_id,
     method: res?.method,
+    icon: res.type === "case" ? <MethodTag tagName={res.method} /> : null,
   };
   return node;
 };
@@ -75,7 +78,6 @@ const CaseTree: React.FC<ICaseTreeProps> = (props) => {
       return;
     }
     const response = await apiDirectoryRoot(projectId);
-    console.log("REE", response);
 
     setTreeData(response.data.map((item) => converResToTreeNode(item)));
   };
@@ -103,8 +105,8 @@ const CaseTree: React.FC<ICaseTreeProps> = (props) => {
       setTreeData(cc);
     });
   };
-
-  return <Tree loadData={onLoadData} treeData={treeData} />;
+  console.log("tt", treeData);
+  return <Tree loadData={onLoadData} treeData={treeData} showIcon={true} />;
 };
 
 export default CaseTree;

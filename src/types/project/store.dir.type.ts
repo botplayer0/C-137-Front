@@ -8,6 +8,7 @@ interface TreeNode {
   caseId?: number
   parentId?: number
   method?: string
+  icon?: React.ReactNode
 }
 
 export type { TreeNode }
