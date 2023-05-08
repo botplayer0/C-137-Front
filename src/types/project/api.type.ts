@@ -37,3 +37,6 @@ interface ResProjectMemberList {
   invite_by: number
 }
 
+export type {
+  ResProjectList
+}

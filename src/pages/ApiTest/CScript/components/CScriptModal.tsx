@@ -79,7 +79,6 @@ const CScriptModal: React.FC<IModalProps> = (props) => {
             <Input
               value={currentScriptInfo?.name}
               onChange={(e) => {
-                console.log("111", e.target.value);
                 updateCurrentScriptInfo("name", e.target.value);
               }}
             />

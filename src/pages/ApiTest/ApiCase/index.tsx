@@ -1,5 +1,5 @@
-import { apiDirectoryRoot } from "@/api/project/api.project.dir";
 import { useDirectoryStore } from "@/store/directory.store";
+import useProjectStore from "@/store/project.store";
 import { ProCard } from "@ant-design/pro-components";
 import { Col, Row } from "antd";
 import { useEffect, useState } from "react";
@@ -7,27 +7,17 @@ import CaseDetail from "./components/CaseDetail";
 import CaseTree from "./components/CaseTree";
 import ProjectSelector from "./components/ProjectSelector";
 import "./index.css";
-import { IProjectSelectorType } from "./types/project.selector";
 
 export default () => {
   const { treeData, setTreeData, setRootTree } = useDirectoryStore();
-  // 控制当前项目
-  const [currentProject, setCurrentProject] = useState<IProjectSelectorType>({
-    value: "",
-    label: "",
-    projectId: 0,
-  });
-
-  const fetchProjectRoot = async (projectId: number) => {
-    const response = await apiDirectoryRoot(projectId);
-    if (response) {
-      setRootTree(response.data);
-    }
-  };
+  const { projectList, fetchProjectList } = useProjectStore();
+  const [selectProject, setSelectProject] = useState<number>(null);
 
   // 控制当前树
   useEffect(() => {
-    fetchProjectRoot(1);
+    if (projectList.length === 0) {
+      fetchProjectList();
+    }
   }, []);
 
   // 控制详情页
@@ -44,10 +34,14 @@ export default () => {
       >
         <Row style={{ paddingBottom: 7 }}>
           <Col span={24}>
-            <ProjectSelector />
+            <ProjectSelector
+              projectList={projectList}
+              selectProject={selectProject}
+              setSelectProject={setSelectProject}
+            />
           </Col>
         </Row>
-        <CaseTree />
+        <CaseTree projectId={selectProject} />
       </ProCard>
       <ProCard headerBordered>
         <div>tab页</div>

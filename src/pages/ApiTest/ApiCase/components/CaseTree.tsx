@@ -1,56 +1,110 @@
-import { useDirectoryStore } from "@/store/directory.store";
-import { Input, Tree } from "antd";
-import React, { useState } from "react";
+import {
+  apiDirectoryChild,
+  apiDirectoryRoot,
+} from "@/api/project/api.project.dir";
+import { ResDirectory } from "@/types/project/api.dir.type";
+import { TreeNode } from "@/types/project/store.dir.type";
+import { Tree } from "antd";
+import React, { useEffect, useState } from "react";
 
-const { Search } = Input;
+const converResToTreeNode = (res: ResDirectory): TreeNode => {
+  // 转化响应成树节点
+  const node: TreeNode = {
+    key:
+      res.type === "directory"
+        ? `dir_${res.directory_id}`
+        : `case_${res.case_id}`,
+    title: res.name,
+    type: res.type,
+    isLeaf: res.type === "case",
+    children: [],
+    caseId: res?.case_id,
+    directoryId: res.directory_id,
+    parentId: res.type === "case" ? res.directory_id : res?.parent_id,
+    method: res?.method,
+  };
+  return node;
+};
 
-const CaseTree: React.FC = () => {
-  const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
-  const [searchValue, setSearchValue] = useState("");
-  const [autoExpandParent, setAutoExpandParent] = useState(true);
-  const { treeData, setTreeByExpand } = useDirectoryStore();
-
-  const onExpand = (newExpandedKeys: React.Key[], info) => {
-    if (info.expanded) {
-      setTreeByExpand(1, info.node.directoryId);
+const updateTreeData = (
+  treeData: TreeNode[],
+  directoryId: number,
+  resData: ResDirectory[]
+) => {
+  treeData.map((node) => {
+    if (node.directoryId === directoryId) {
+      return {
+        ...node,
+        children: resData.map((item) => converResToTreeNode(item)),
+      };
     }
-    console.log("what", treeData);
-    setExpandedKeys(newExpandedKeys);
-    setAutoExpandParent(false);
+    if (node.children) {
+      return {
+        ...node,
+        children: updateTreeData(node.children, directoryId, resData),
+      };
+    }
+  });
+};
+
+const deepInsertCaseTree = (
+  orignalTree: TreeNode,
+  directoryId: number,
+  response: ResDirectory[]
+) => {
+  if (orignalTree.directoryId === directoryId) {
+    orignalTree.children = response.map((item) => converResToTreeNode(item));
+  } else {
+    orignalTree.children?.forEach((item, index) =>
+      deepInsertCaseTree(item, directoryId, response)
+    );
+  }
+};
+
+// It's just a simple demo. You can use tree map to optimize update perf.
+
+interface ICaseTreeProps {
+  projectId: number;
+}
+
+const CaseTree: React.FC<ICaseTreeProps> = (props) => {
+  const [treeData, setTreeData] = useState([]);
+
+  const fetchRootTree = async (projectId: number) => {
+    if (projectId === 0) {
+      return;
+    }
+    const response = await apiDirectoryRoot(projectId);
+    console.log("REE", response);
+
+    setTreeData(response.data.map((item) => converResToTreeNode(item)));
   };
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    const newExpandedKeys = dataList
-      .map((item) => {
-        if (item.title.indexOf(value) > -1) {
-          return getParentKey(item.key, defaultData);
-        }
-        return null;
-      })
-      .filter((item, i, self) => item && self.indexOf(item) === i);
-    setExpandedKeys(newExpandedKeys as React.Key[]);
-    setSearchValue(value);
-    setAutoExpandParent(true);
+  const fetchTreeChild = async (projectId: number, directoryId: number) => {
+    const response = await apiDirectoryChild(projectId, directoryId);
+    return response.data || [];
   };
 
-  console.log("11", JSON.stringify(treeData));
+  useEffect(() => {
+    if (props.projectId) {
+      fetchRootTree(props.projectId);
+    }
+  }, [props.projectId]);
 
-  return (
-    <div>
-      <Search
-        style={{ marginBottom: 8 }}
-        placeholder="Search"
-        onChange={onChange}
-      />
-      <Tree
-        onExpand={onExpand}
-        expandedKeys={expandedKeys}
-        // autoExpandParent={autoExpandParent}
-        treeData={treeData}
-      />
-    </div>
-  );
+  const onLoadData = async ({ key, directoryId, children }: any) => {
+    if (children && children.length > 0) {
+      return;
+    }
+    fetchTreeChild(props.projectId, directoryId).then((res) => {
+      let cc = treeData.map((item) => {
+        deepInsertCaseTree(item, directoryId, res);
+        return item;
+      });
+      setTreeData(cc);
+    });
+  };
+
+  return <Tree loadData={onLoadData} treeData={treeData} />;
 };
 
 export default CaseTree;

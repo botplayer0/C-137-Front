@@ -31,6 +31,23 @@ const insertToTree = (treeData: TreeNode[], resData: ResDirectory) => {
   })
 }
 
+const updateTreeData = (treeData: TreeNode[], directoryId: number, resData: ResDirectory[]) => {
+  treeData.map((node) => {
+    if (node.directoryId === directoryId) {
+      return {
+        ...node,
+        children: resData.map((item) => converResToTreeNode(item))
+      }
+    }
+    if (node.children) {
+      return {
+        ...node,
+        children: updateTreeData(node.children, directoryId, resData)
+      }
+    }
+  })
+}
+
 
 const convertResDirectoryToTreeNode = (resDirectories: ResDirectory[], parentId?: number): TreeNode[] => {
   const nodes: TreeNode[] = [];
@@ -76,7 +93,7 @@ const useDirectoryStore = create<DirectoryState>((set, get) => ({
   setTreeByExpand: async (projectId, directoryId) => {
     const response = await apiDirectoryChild(projectId, directoryId)
     const tempData = get().treeData
-    insertToTree(tempData, response.data[0])
+    updateTreeData(tempData, directoryId, response.data)
     set({ treeData: tempData })
   }
 }))

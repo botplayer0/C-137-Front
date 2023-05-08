@@ -1,5 +1,6 @@
 import { apiProjectList } from "@/api/project/api.project"
 import { create } from "zustand"
+import { ResProjectList } from "@/types/project/api.type"
 
 
 interface IProjectStoreProp {
@@ -17,9 +18,9 @@ const useProjectStore = create<IProjectStoreProp>((set, get) => ({
   setProjectList: (data: ResProjectList[]) => set({ projectList: data }),
   fetchProjectList: async () => {
     const response = await apiProjectList()
-    if (response.code === 0) {
-      set({ projectList: response.data })
-    }
+
+    set({ projectList: response.data })
+
   }
 }))
 
