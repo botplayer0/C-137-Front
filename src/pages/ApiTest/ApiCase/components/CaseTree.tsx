@@ -68,10 +68,17 @@ const deepInsertCaseTree = (
 
 interface ICaseTreeProps {
   projectId: number;
+  setSelectingCase: (selectCase: number) => void;
 }
 
 const CaseTree: React.FC<ICaseTreeProps> = (props) => {
   const [treeData, setTreeData] = useState([]);
+
+  const onSelectCase = (selectNode) => {
+    if (selectNode.node.type === "case") {
+      props.setSelectingCase(selectNode.node.caseId);
+    }
+  };
 
   const fetchRootTree = async (projectId: number) => {
     if (projectId === 0) {
@@ -105,8 +112,14 @@ const CaseTree: React.FC<ICaseTreeProps> = (props) => {
       setTreeData(cc);
     });
   };
-  console.log("tt", treeData);
-  return <Tree loadData={onLoadData} treeData={treeData} showIcon={true} />;
+  return (
+    <Tree
+      loadData={onLoadData}
+      treeData={treeData}
+      showIcon={true}
+      onSelect={(key, info) => onSelectCase(info)}
+    />
+  );
 };
 
 export default CaseTree;

@@ -2,6 +2,9 @@ import ApiCase from "@/pages/ApiTest/ApiCase";
 import CScript from "@/pages/ApiTest/CScript";
 import EnvSetting from "@/pages/Settings/EnvSetting";
 import Project from "@/pages/Settings/Project";
+import DataProduct from "@/pages/Tools/DataProduct";
+import HttpRequest from "@/pages/Tools/HttpRequest";
+import SqlDebug from "@/pages/Tools/SqlDebug";
 import {
   ApiOutlined,
   BarChartOutlined,
@@ -141,19 +144,19 @@ export const routeConfig = {
             path: "/tools/http",
             name: "HTTP请求",
             icon: <ApiOutlined />,
-            component: <div>1</div>,
+            component: <HttpRequest />,
           },
           {
             path: "/tools/sql",
             name: "数据库查询",
             icon: <ConsoleSqlOutlined />,
-            component: <div>1</div>,
+            component: <SqlDebug />,
           },
           {
             path: "/tools/factory",
             name: "数据生成",
             icon: <NodeIndexOutlined />,
-            component: <div>1</div>,
+            component: <DataProduct />,
           },
         ],
       },

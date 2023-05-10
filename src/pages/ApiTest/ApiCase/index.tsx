@@ -12,6 +12,7 @@ export default () => {
   const { treeData, setTreeData, setRootTree } = useDirectoryStore();
   const { projectList, fetchProjectList } = useProjectStore();
   const [selectProject, setSelectProject] = useState<number>(null);
+  const [selectingCase, setSelectingCase] = useState<number>(null);
 
   // 控制当前树
   useEffect(() => {
@@ -21,6 +22,7 @@ export default () => {
   }, []);
 
   // 控制详情页
+  console.log("111", selectingCase);
 
   return (
     <ProCard split="vertical" style={{ height: "80vh" }}>
@@ -41,7 +43,10 @@ export default () => {
             />
           </Col>
         </Row>
-        <CaseTree projectId={selectProject} />
+        <CaseTree
+          projectId={selectProject}
+          setSelectingCase={setSelectingCase}
+        />
       </ProCard>
       <ProCard headerBordered>
         <div>tab页</div>

@@ -33,3 +33,17 @@ interface ApiCaseInfo {
   body_type?: EnumCaseRequestBody
   request_type: number
 }
+
+interface ApiSuffixInfo {
+  suffix_id: number
+  name: string
+  case_id: number
+  enable: boolean
+  sort: number
+  suffix_type: number
+  suffix_execute: number
+  command_text?: string
+  out_name?: string
+  sql_id?: number
+  index?: number
+}
