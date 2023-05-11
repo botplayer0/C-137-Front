@@ -1,3 +1,5 @@
+import { EnumSuffixExecuteType, EnumSuffixType } from "./enum.type"
+
 enum EnumCaseStatus {
   DEBUG = 1,
   CLOSE = 2,
@@ -20,6 +22,8 @@ enum EnumCaseRequestBody {
 }
 
 interface ApiCaseInfo {
+  case_id: number
+  request_type: number
   name: string
   url: string
   method: string
@@ -28,22 +32,29 @@ interface ApiCaseInfo {
   status?: EnumCaseStatus
   priority?: string
   case_type: EnumCaseType
-  headers: { [key: string]: any }
+  headers?: { [key: string]: any }
+  params?: { [key: string]: any }
+  path?: { [key: string]: any }
   body?: any
   body_type?: EnumCaseRequestBody
-  request_type: number
+
 }
 
 interface ApiSuffixInfo {
   suffix_id: number
   name: string
   case_id: number
-  enable: boolean
-  sort: number
-  suffix_type: number
-  suffix_execute: number
+  suffix_type: EnumSuffixType
+  suffix_execute: EnumSuffixExecuteType
+  sql_id?: number
+  redis_id?: number
+  common_id?: number
   command_text?: string
   out_name?: string
-  sql_id?: number
+  extract_from: number
+
+  enable: boolean
+  sort: number
+
   index?: number
 }
