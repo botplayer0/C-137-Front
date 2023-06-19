@@ -1,4 +1,4 @@
-import { Button, Input } from "antd";
+import { Button, Input, Space } from "antd";
 
 interface IPropGiftType {
   giftType: number;
@@ -18,20 +18,20 @@ const GiftChoose: React.FC<IPropGiftType> = (props) => {
       }}
     >
       {props.giftType === 1 && (
-        <div>
-          <div style={{ display: "flex" }}>
-            <div>添加个人会员天数:</div>
-            <div>
-              <Input width={""} />
-            </div>
-            <div>
-              <Button>执行</Button>
-            </div>
-          </div>
-          <div style={{ display: "flex" }}>
-            添加团队会员天数: <Input /> <Button>执行</Button>
-          </div>
-        </div>
+        <>
+          <Space>
+            <p>添加个人会员天数:</p>
+            <Input />
+            <Button>执行</Button>
+          </Space>
+          <br />
+          <br />
+          <Space>
+            <p>添加团队会员天数:</p>
+            <Input />
+            <Button>执行</Button>
+          </Space>
+        </>
       )}
     </div>
   );
