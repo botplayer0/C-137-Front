@@ -3,6 +3,7 @@ import CScript from "@/pages/ApiTest/CScript";
 import EnvSetting from "@/pages/Settings/EnvSetting";
 import Project from "@/pages/Settings/Project";
 import DataProduct from "@/pages/Tools/DataProduct";
+import GiftVip from "@/pages/Tools/GiftVip";
 import HttpRequest from "@/pages/Tools/HttpRequest";
 import SqlDebug from "@/pages/Tools/SqlDebug";
 import {
@@ -14,6 +15,7 @@ import {
   CodeOutlined,
   ConsoleSqlOutlined,
   DashboardOutlined,
+  GiftOutlined,
   LineChartOutlined,
   NodeIndexOutlined,
   ProfileOutlined,
@@ -157,6 +159,12 @@ export const routeConfig = {
             name: "数据生成",
             icon: <NodeIndexOutlined />,
             component: <DataProduct />,
+          },
+          {
+            path: "/tools/gift",
+            name: "会员赠送",
+            icon: <GiftOutlined />,
+            component: <GiftVip />,
           },
         ],
       },
