@@ -2,7 +2,7 @@ import { Tag } from "antd";
 
 interface MethodTagProp {
   tagName: string;
-  size: "small" | "normal";
+  size?: "small" | "normal";
 }
 
 export default (props: MethodTagProp) => {
@@ -19,7 +19,7 @@ export default (props: MethodTagProp) => {
   } else {
     color = "cyan";
   }
-  const sizeWidth = props.size === "small" ? "70px" : "100px";
+  const sizeWidth = props?.size === "small" ? "70px" : "100px";
   return (
     <Tag style={{ maxWidth: sizeWidth }} color={color}>
       {props.tagName.toUpperCase()}

@@ -4,7 +4,11 @@ const onChange = (key: string) => {
   console.log(key);
 };
 
-export default () => {
+interface IPropCaseDetail {
+  case_key: string;
+}
+
+export default (props: IPropCaseDetail) => {
   const items: TabsProps["items"] = [
     {
       key: "1",
@@ -22,6 +26,7 @@ export default () => {
       children: <div>后置步骤</div>,
     },
   ];
+
   return (
     <>
       {/* {gutter[0] == 横向间距 gutter[1] == 纵向间距} */}
