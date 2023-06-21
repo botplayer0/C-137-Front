@@ -3,7 +3,7 @@ import http, { IResponse } from "@/utils/http";
 
 // 添加环境
 export const apiEnvAdd = async (data: ReqEnvAdd) => {
-  const response = await http.post<IResponse<ReqEnvAdd>>('/api/setting/env/add', data)
+  const response = await http.post<ReqEnvAdd>('/api/setting/env/add', data)
   return response
 }
 

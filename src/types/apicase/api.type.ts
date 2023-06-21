@@ -1,5 +1,10 @@
 import { EnumSuffixExecuteType, EnumSuffixType } from "./enum.type"
 
+enum EnumRequestType {
+  HTTP = 1,
+  GRPC = 2
+}
+
 enum EnumCaseStatus {
   DEBUG = 1,
   CLOSE = 2,
@@ -21,9 +26,9 @@ enum EnumCaseRequestBody {
   GRAPHQL
 }
 
-interface ApiCaseInfo {
+interface TypeApiCaseDetail {
   case_id: number
-  request_type: number
+  request_type: EnumRequestType
   name: string
   url: string
   method: string
@@ -37,10 +42,14 @@ interface ApiCaseInfo {
   path?: { [key: string]: any }
   body?: any
   body_type?: EnumCaseRequestBody
+  create_user: number
+  update_user: number
+  created_at: string
+  updated_at: string
 
 }
 
-interface ApiSuffixInfo {
+interface TypeApiSuffixDetail {
   suffix_id: number
   name: string
   case_id: number
@@ -57,4 +66,21 @@ interface ApiSuffixInfo {
   sort: number
 
   index?: number
+}
+
+interface TypeApiSuffx {
+  suffix?: TypeApiSuffixDetail[],
+  prefix?: TypeApiSuffixDetail[]
+}
+
+
+interface ResCaseDetail {
+  case_info: TypeApiCaseDetail,
+  suffix_info?: TypeApiSuffx
+}
+
+export type {
+  TypeApiCaseDetail,
+  TypeApiSuffixDetail,
+  ResCaseDetail
 }

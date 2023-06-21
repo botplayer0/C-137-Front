@@ -1,3 +1,4 @@
+import useCaseStore from "@/store/case.store";
 import { Tabs } from "antd";
 import { ReactNode } from "react";
 interface IPropTabsItem {
@@ -15,6 +16,7 @@ interface IPropTabs {
 }
 
 export default (props: IPropTabs) => {
+  const { removeCase } = useCaseStore();
   const remove = (targetKey: string) => {
     const targetIndex = props.tabItem.findIndex(
       (pane) => pane.key === targetKey
@@ -31,6 +33,7 @@ export default (props: IPropTabs) => {
       newPanes[0].closable = false;
     }
     props.setTabItem(newPanes);
+    removeCase(targetKey);
   };
 
   return (

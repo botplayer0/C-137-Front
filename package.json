@@ -20,7 +20,7 @@
     "react-ace": "^10.1.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
-    "zustand": "^4.3.6"
+    "zustand": "^4.3.8"
   },
   "devDependencies": {
     "@types/ace": "^0.0.48",

@@ -1,30 +1,23 @@
+import { ResCaseDetail } from "@/types/apicase/api.type";
 import { create } from "zustand";
 
-interface ITabsItemProp {
-  label: string,
-  children: React.ReactNode,
-  key: string
+
+interface IPropCaseList {
+  caseKey: string,
+  caseInfo: ResCaseDetail
 }
 
-interface ICaseStoreProp {
-  paneTab: ITabsItemProp[],
-  addPaneTab: (caseId: number) => void,
-  removePaneTab: (tabKey: string) => void
-  currentPaneTab: string,
-  setCurrentPaneTab: (pane: string) => void
+interface IStoreCase {
+  caseList: IPropCaseList[],
+  addCaseList: (caseKey: string, caseInfo: ResCaseDetail) => void
+  removeCase: (caseKey: string) => void
+  // addCase: (caseKey: string, caseInfo: ResCaseDetail) => void
 }
 
-const useCasePaneStore = create<ICaseStoreProp>((set, get) => ({
-  paneTab: [],
-  addPaneTab: (caseId) => {
-    // 接口请求
-    set((state) => ({ paneTab: [...state.paneTab] }))
-  },
-  removePaneTab: (tabKey) => {
-    set((state) => ({
-      paneTab: state.paneTab.filter((item) => item.key !== tabKey)
-    }))
-  },
-  currentPaneTab: "",
-  setCurrentPaneTab: (pane) => set({ currentPaneTab: pane })
+const useCaseStore = create<IStoreCase>((set) => ({
+  caseList: [],
+  addCaseList: (caseKey, caseInfo) => set((state) => ({ caseList: [...state.caseList, { caseKey, caseInfo }] })),
+  removeCase: (caseKey) => set((state) => ({ caseList: state.caseList.filter((item) => item.caseKey !== caseKey) }))
 }))
+
+export default useCaseStore

@@ -3,7 +3,7 @@ import http, { IResponse } from "@/utils/http";
 
 // 添加脚本
 export const apiScriptAdd = async (data: ReqAddScript) => {
-  const response = await http.post<IResponse<ResAddScript>>("/common/cs/add", data)
+  const response = await http.post<ResAddScript>("/common/cs/add", data)
   return response
 }
 

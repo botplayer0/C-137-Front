@@ -2,6 +2,7 @@ import useProjectStore from "@/store/project.store";
 import { ProCard } from "@ant-design/pro-components";
 import { Col, Row } from "antd";
 import { ReactNode, useEffect, useState } from "react";
+import CaseDetail from "./components/CaseDetail";
 import CaseTabs from "./components/CaseTabs";
 import CaseTree from "./components/CaseTree";
 import ProjectSelector from "./components/ProjectSelector";
@@ -33,7 +34,6 @@ export default () => {
     console.log("222", info);
     if (info.node.type === "case") {
       const tabKey = `case_${info.node.caseId}`;
-      setSelectedNode(tabKey);
       const exists = tabItem.some((obj) => obj.key === tabKey);
       if (!exists) {
         if (tabItem.length === 1) {
@@ -46,10 +46,11 @@ export default () => {
           {
             label: info.node.title,
             key: tabKey,
-            children: <p>{info.node.title}</p>,
+            children: <CaseDetail caseKey={tabKey} />,
           },
         ]);
       }
+      setSelectedNode(tabKey);
       setActiveKey(tabKey);
     }
   };
