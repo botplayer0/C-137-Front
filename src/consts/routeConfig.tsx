@@ -1,6 +1,6 @@
 import ApiCase from "@/pages/ApiTest/ApiCase";
-import CaseSuffix from "@/pages/ApiTest/ApiCase/components/CaseSuffix";
 import CScript from "@/pages/ApiTest/CScript";
+import NewCase from "@/pages/ApiTest/NewCase";
 import EnvSetting from "@/pages/Settings/EnvSetting";
 import Project from "@/pages/Settings/Project";
 import DataProduct from "@/pages/Tools/DataProduct";
@@ -107,7 +107,7 @@ export const routeConfig = {
             path: "/apitest/testcase1",
             name: "测试用例1",
             icon: <BarsOutlined />,
-            component: <CaseSuffix />,
+            component: <NewCase />,
           },
           {
             path: "/apitest/plan",

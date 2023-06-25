@@ -1,7 +1,6 @@
 import { ProCard } from "@ant-design/pro-components";
 import { Tabs, Tree } from "antd";
 import { ReactNode, useState } from "react";
-import CaseTabs from "../ApiCase/components/CaseTabs";
 
 const { TreeNode } = Tree;
 const { TabPane } = Tabs;
@@ -52,18 +51,9 @@ export default () => {
   };
 
   return (
-    <ProCard split="vertical" style={{ height: "80vh" }}>
-      <ProCard colSpan={"17%"}>
-        <Tree onSelect={onSelectNode} defaultExpandAll treeData={treeData} />
-      </ProCard>
-      <ProCard>
-        <CaseTabs
-          activeKey={activeKey}
-          setActiveKey={setActiveKey}
-          tabItem={tabItem}
-          setTabItem={setTabItem}
-        />
-      </ProCard>
+    <ProCard split="vertical" style={{ width: "70%", height: "70%" }}>
+      <ProCard colSpan={"17%"}>11</ProCard>
+      <ProCard>22</ProCard>
     </ProCard>
   );
 };

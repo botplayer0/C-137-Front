@@ -1,82 +1,63 @@
+import SuffixDragTable from "@/components/SuffixDragTable";
+import { TypeApiSuffixDetail } from "@/types/apicase/api.type";
 import { ProCard } from "@ant-design/pro-components";
-
-import { Space, Table } from "antd";
-import type { ColumnsType } from "antd/es/table";
-
+import { Steps } from "antd";
 interface DataType {
   key: string;
   name: string;
+  sort: number;
   executeType: number;
   returnValue: string;
   isEnable: boolean;
 }
 
-const columns: ColumnsType<DataType> = [
-  {
-    title: "排序",
-    dataIndex: "sort",
-    key: "sort",
-  },
-  {
-    title: "名称",
-    dataIndex: "name",
-    key: "name",
-  },
-  {
-    title: "类型",
-    dataIndex: "executeType",
-    key: "executeType",
-  },
-  {
-    title: "返回值",
-    dataIndex: "returnValue",
-    key: "returnValue",
-  },
-  {
-    title: "启用",
-    dataIndex: "isEnable",
-    key: "isEnable",
-  },
-  {
-    title: "操作",
-    key: "action",
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Edit</a>
-        <a>Delete</a>
-      </Space>
-    ),
-  },
-];
+interface IPropSuffix {
+  suffixType: number;
+  prefix?: TypeApiSuffixDetail[];
+  suffix?: TypeApiSuffixDetail[];
+}
 
-const data: DataType[] = [
-  {
-    key: "1",
-    name: "执行脚本获取当前时间戳",
-    executeType: 1,
-    returnValue: "now_time",
-    isEnable: true,
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    executeType: 2,
-    returnValue: "my_sapace",
-    isEnable: true,
-  },
-];
+const formatSuffix = (suffixData: TypeApiSuffixDetail[]) => {
+  const data = suffixData.map((item) => ({
+    key: item.suffix_id.toString(),
+    name: item.name,
+    sort: item.sort,
+    executeType: item.suffix_execute,
+    returnValue: item.out_name,
+    isEnable: item.enable,
+  }));
+  return data;
+};
 
-export default () => {
+export default (props: IPropSuffix) => {
+  const data: DataType[] =
+    props.suffixType === 1
+      ? formatSuffix(props.prefix)
+      : formatSuffix(props.suffix);
+  console.log("fff", data);
   return (
-    <div
-      style={{ width: "78%", borderStyle: "dotted", borderColor: "#f4f4f4" }}
-    >
-      <ProCard split="vertical" gutter={[16, 16]} style={{ height: "40vh" }}>
-        <ProCard colSpan="70%">
-          <Table columns={columns} dataSource={data} />
-        </ProCard>
-        <ProCard>2</ProCard>
+    <ProCard split="vertical" style={{ height: "40vh" }}>
+      <ProCard colSpan="70%">
+        <SuffixDragTable data={data} />
       </ProCard>
-    </div>
+      <ProCard>
+        <Steps
+          direction="vertical"
+          size="small"
+          // current={1}
+          items={[
+            { title: "??", description: "11" },
+            {
+              title: "In Progress",
+              description: "22",
+            },
+            {
+              title: "Waiting",
+              description: "33",
+            },
+          ]}
+        />
+      </ProCard>
+    </ProCard>
   );
 };

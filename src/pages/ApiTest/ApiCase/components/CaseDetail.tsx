@@ -1,8 +1,13 @@
 import { apiCaseDetail } from "@/api/case/api.case";
 import useCaseStore from "@/store/case.store";
-import { ResCaseDetail } from "@/types/apicase/api.type";
-import { Col, Row, Tabs, TabsProps } from "antd";
+import {
+  ResCaseDetail,
+  TypeApiCaseDetail,
+  TypeApiSuffixDetail,
+} from "@/types/apicase/api.type";
+import { Tabs, TabsProps } from "antd";
 import { useEffect, useState } from "react";
+import CaseDescription from "./CaseDescription";
 import CaseSuffix from "./CaseSuffix";
 
 const onChange = (key: string) => {
@@ -17,6 +22,13 @@ export default (props: IPropCaseDetail) => {
   const { caseList, addCaseList } = useCaseStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [currentCase, setCurrenCase] = useState<ResCaseDetail | null>(null);
+  const [tabItem, setTabItem] = useState<TabsProps["items"]>([]);
+
+  const [curCaseDetail, setCurCaseDetail] = useState<TypeApiCaseDetail | null>(
+    null
+  );
+  const [curCasePrefix, setCurCasePrefix] = useState<TypeApiSuffixDetail[]>([]);
+  const [curCaseSuffix, setCurCaseSuffix] = useState<TypeApiSuffixDetail[]>([]);
 
   const getCaseDetail = async (caseKey: string) => {
     if (
@@ -25,36 +37,39 @@ export default (props: IPropCaseDetail) => {
         !caseList.some((item) => item.caseKey === caseKey))
     ) {
       const response = await apiCaseDetail(parseInt(caseKey.split("_")[1]));
-      console.log("1", response);
       if (response.code !== 0) {
         setCurrenCase(null);
       } else {
         addCaseList(caseKey, response.data);
+        setCurrenCase(response.data);
+        setCurCaseDetail(response.data.case_info);
+        setCurCasePrefix(response.data.suffix_info?.prefix);
+        setCurCaseSuffix(response.data.suffix_info?.suffix);
         setLoading(false);
       }
     }
-
-    const filterCurrentCase = caseList.filter(
-      (item) => item.caseKey === props.caseKey
-    );
-
-    if (filterCurrentCase.length > 0) {
-      setCurrenCase(filterCurrentCase[0].caseInfo);
-    } else {
-      setCurrenCase(null);
-    }
   };
+
+  //   const filterCurrentCase = caseList.filter(
+  //     (item) => item.caseKey === props.caseKey
+  //   );
+
+  //   if (filterCurrentCase.length > 0) {
+  //     setCurrenCase(filterCurrentCase[0].caseInfo);
+  //   } else {
+  //     setCurrenCase(null);
+  //   }
+  // };
 
   useEffect(() => {
     getCaseDetail(props.caseKey);
-    console.log("ggg", caseList);
-  }, [props.caseKey, caseList]);
+  }, [props.caseKey]);
 
   const items: TabsProps["items"] = [
     {
       key: "1",
       label: `前置步骤`,
-      children: <CaseSuffix />,
+      children: <CaseSuffix suffixType={1} prefix={curCasePrefix} />,
     },
     {
       key: "2",
@@ -75,46 +90,11 @@ export default (props: IPropCaseDetail) => {
       ) : currentCase === null ? (
         <div>加载失败</div>
       ) : (
-        <Row gutter={[8, 24]}>
-          <Col span={6} style={{ alignSelf: "center" }}>
-            用例名称: {currentCase.case_info.name}
-          </Col>
-          <Col span={6} style={{ alignSelf: "center" }}>
-            请求方式:{currentCase.case_info.method}
-          </Col>
-          <Col span={12} style={{ alignSelf: "center" }}>
-            请求url:{currentCase.case_info.url}
-          </Col>
-          <Col span={6} style={{ alignSelf: "center" }}>
-            请求类型:{currentCase.case_info.request_type}
-          </Col>
-          <Col span={6} style={{ alignSelf: "center" }}>
-            用例等级:{currentCase.case_info.priority}
-          </Col>
-          <Col span={6} style={{ alignSelf: "center" }}>
-            用例状态:{currentCase.case_info.status}
-          </Col>
-          <Col span={6} style={{ alignSelf: "center" }}>
-            用例标签:{currentCase.case_info.tag}
-          </Col>
-
-          <Col span={6} style={{ alignSelf: "center" }}>
-            创建人:{currentCase.case_info.create_user}
-          </Col>
-          <Col span={6} style={{ alignSelf: "center" }}>
-            更新人:{currentCase.case_info.update_user}
-          </Col>
-          <Col span={6} style={{ alignSelf: "center" }}>
-            创建时间:{currentCase.case_info.created_at}
-          </Col>
-          <Col span={6} style={{ alignSelf: "center" }}>
-            更新时间:{currentCase.case_info.updated_at}
-          </Col>
-        </Row>
+        <CaseDescription case_info={currentCase.case_info} />
       )}
 
       <br />
-      <Tabs defaultActiveKey="1" items={items} onChange={onChange} />
+      <Tabs defaultActiveKey="1" onChange={onChange}></Tabs>
     </>
   );
 };

@@ -31,7 +31,6 @@ export default () => {
   }, []);
 
   const onSelectNode = (info) => {
-    console.log("222", info);
     if (info.node.type === "case") {
       const tabKey = `case_${info.node.caseId}`;
       const exists = tabItem.some((obj) => obj.key === tabKey);
